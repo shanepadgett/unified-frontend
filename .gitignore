@@ -136,4 +136,4 @@ dist
 .pnp.*
 
 # AI
-/ai_memories
+/ai_memories/_private
