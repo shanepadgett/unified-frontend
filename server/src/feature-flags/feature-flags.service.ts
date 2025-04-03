@@ -1,4 +1,5 @@
 import { FeatureFlag, CreateFeatureFlag, UpdateFeatureFlag } from "./feature-flag.model.ts";
+import { environmentsService } from "../environments/environments.service.ts";
 
 class FeatureFlagsService {
   private featureFlags: Map<string, FeatureFlag> = new Map();
@@ -9,13 +10,18 @@ class FeatureFlagsService {
   }
 
   private seedData() {
+    // Get the default environment name
+    const environments = environmentsService.findAll();
+    const defaultEnv = environments.find(env => env.isDefault);
+    const defaultEnvName = defaultEnv?.name || "development";
+
     const seedFlags: FeatureFlag[] = [
       {
         id: crypto.randomUUID(),
         name: "Dark Mode",
         description: "Enable dark mode across the application",
         enabled: true,
-        environment: "dev",
+        environment: defaultEnvName,
         lastModified: new Date(),
         owner: "UI Team",
         rolloutPercentage: 100,
@@ -25,7 +31,7 @@ class FeatureFlagsService {
         name: "New Dashboard",
         description: "Enable the new dashboard experience",
         enabled: false,
-        environment: "dev",
+        environment: defaultEnvName,
         lastModified: new Date(),
         owner: "Product Team",
         rolloutPercentage: 0,
@@ -35,7 +41,7 @@ class FeatureFlagsService {
         name: "Analytics",
         description: "Enable analytics tracking",
         enabled: true,
-        environment: "prod",
+        environment: defaultEnvName,
         lastModified: new Date(),
         owner: "Data Team",
         rolloutPercentage: 100,
