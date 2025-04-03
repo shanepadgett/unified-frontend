@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import React, { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -59,11 +59,17 @@ function FeatureFlagsPage() {
             Manage feature flags across different environments
           </p>
         </div>
-        <div className="w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <EnvironmentSelector
             selectedEnvironment={selectedEnvironment}
             onChange={setSelectedEnvironment}
           />
+          <Link
+            to="/feature-flags/create"
+            className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Create Flag
+          </Link>
         </div>
       </div>
 

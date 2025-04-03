@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createEnvironment } from '../../api/environments';
+import { createEnvironment, CreateEnvironment } from '../../api/environments.ts';
 
 interface CreateEnvironmentFormProps {
   onSuccess: () => void;
@@ -14,32 +14,34 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim()) {
       setError('Name is required');
       return;
     }
-    
+
     if (!description.trim()) {
       setError('Description is required');
       return;
     }
-    
+
     try {
       setIsSubmitting(true);
       setError(null);
-      
-      await createEnvironment({
+
+      const envData: CreateEnvironment = {
         name: name.trim(),
         description: description.trim(),
         isDefault,
-      });
-      
+      };
+
+      await createEnvironment({ data: envData });
+
       // Reset form
       setName('');
       setDescription('');
       setIsDefault(false);
-      
+
       // Notify parent component
       onSuccess();
     } catch (err) {
@@ -53,13 +55,13 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Create New Environment</h2>
-      
+
       {error && (
         <div className="bg-red-50 dark:bg-red-900 border-l-4 border-red-500 p-4 mb-4">
           <p className="text-red-700 dark:text-red-200">{error}</p>
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -69,12 +71,12 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
             id="name"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setName((e.target as HTMLInputElement).value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             placeholder="e.g., development, staging, production"
           />
         </div>
-        
+
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Description
@@ -82,26 +84,26 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
           <textarea
             id="description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => setDescription((e.target as HTMLTextAreaElement).value)}
             rows={3}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             placeholder="Describe the purpose of this environment"
           />
         </div>
-        
+
         <div className="flex items-center">
           <input
             id="isDefault"
             type="checkbox"
             checked={isDefault}
-            onChange={(e) => setIsDefault(e.target.checked)}
+            onChange={(e) => setIsDefault((e.target as HTMLInputElement).checked)}
             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-600"
           />
           <label htmlFor="isDefault" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
             Set as default environment
           </label>
         </div>
-        
+
         <div className="pt-2">
           <button
             type="submit"

@@ -79,27 +79,33 @@ export const getDefaultEnvironment = createServerFn({
 export const createEnvironment = createServerFn({
   method: 'POST'
 })
-.validator((data: CreateEnvironment) => {
-  if (!data) {
-    throw new Error('Missing data for create environment');
-  }
+.validator((data: unknown) => {
   return data;
 })
 .handler(async (ctx) => {
-  const data = ctx.data;
-  const response = await fetch(`${API_BASE_URL}/environments`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to create environment: ${response.statusText}`);
+  const data = ctx.data as CreateEnvironment;
+  if (!data || !data.name || !data.description) {
+    throw new Error('Missing data for create environment');
   }
 
-  return await response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/environments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      return await response.json();
+    }
+
+    throw new Error(`Failed to create environment: ${response.statusText}`);
+  } catch (error) {
+    console.error('Error with API URL:', error);
+    throw new Error('Failed to create environment. Please try again.');
+  }
 });
 
 // Update an environment
