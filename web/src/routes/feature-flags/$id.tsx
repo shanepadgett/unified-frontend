@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { 
-  getFeatureFlag, 
-  updateFeatureFlag, 
+import {
+  getFeatureFlag,
+  updateFeatureFlag,
   deleteFeatureFlag,
-  type FeatureFlag, 
-  type UpdateFeatureFlag 
-} from '../../api/featureFlags';
-import { FeatureFlagForm } from '../../components/feature-flags';
+  type FeatureFlag,
+  type UpdateFeatureFlag
+} from '../../api/featureFlags.ts';
+import { FeatureFlagForm } from '../../components/feature-flags/index.ts';
 
 export const Route = createFileRoute('/feature-flags/$id')({
   component: EditFeatureFlagPage,
@@ -20,17 +20,18 @@ function EditFeatureFlagPage() {
   const queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [hasFormChanges, setHasFormChanges] = useState(false);
 
   // Fetch the feature flag
   const { data: flag, isLoading, isError } = useQuery<FeatureFlag>({
     queryKey: ['featureFlag', id],
-    queryFn: () => getFeatureFlag(id),
+    queryFn: () => getFeatureFlag({ data: id }),
   });
 
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: (data: UpdateFeatureFlag) => {
-      return updateFeatureFlag({ data: { id, flag: data } }) as Promise<any>;
+      return updateFeatureFlag({ data: { id, flag: data } }) as Promise<unknown>;
     },
     onSuccess: () => {
       // Invalidate and refetch feature flags
@@ -47,7 +48,7 @@ function EditFeatureFlagPage() {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: () => {
-      return deleteFeatureFlag(id) as Promise<any>;
+      return deleteFeatureFlag({ data: id }) as Promise<unknown>;
     },
     onSuccess: () => {
       // Invalidate and refetch feature flags
@@ -60,9 +61,13 @@ function EditFeatureFlagPage() {
     },
   });
 
-  const handleSubmit = async (data: UpdateFeatureFlag) => {
+  const handleSubmit = async (data: UpdateFeatureFlag): Promise<void> => {
     setError(null);
-    updateMutation.mutate(data);
+    await new Promise<void>((resolve) => {
+      updateMutation.mutate(data, {
+        onSettled: () => resolve()
+      });
+    });
   };
 
   const handleDelete = () => {
@@ -94,6 +99,7 @@ function EditFeatureFlagPage() {
           <p className="text-red-700 dark:text-red-400">Error loading feature flag</p>
         </div>
         <button
+          type="button"
           onClick={() => navigate({ to: '/' })}
           className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
@@ -107,6 +113,7 @@ function EditFeatureFlagPage() {
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-6">
         <button
+          type="button"
           onClick={() => navigate({ to: '/' })}
           className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-500"
         >
@@ -126,6 +133,7 @@ function EditFeatureFlagPage() {
           Back to Feature Flags
         </button>
         <button
+          type="button"
           onClick={handleDelete}
           className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
         >
@@ -142,12 +150,14 @@ function EditFeatureFlagPage() {
             </p>
             <div className="flex justify-end space-x-3">
               <button
+                type="button"
                 onClick={cancelDelete}
                 className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={confirmDelete}
                 className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 disabled={deleteMutation.isPending}
@@ -165,6 +175,7 @@ function EditFeatureFlagPage() {
         onSubmit={handleSubmit}
         isSubmitting={updateMutation.isPending}
         error={error}
+        onFormChange={setHasFormChanges}
       />
     </div>
   );

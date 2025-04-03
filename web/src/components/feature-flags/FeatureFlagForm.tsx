@@ -9,6 +9,7 @@ interface FeatureFlagFormProps {
   isSubmitting: boolean;
   error: string | null;
   mode: 'create' | 'edit';
+  onFormChange?: (hasChanges: boolean) => void;
 }
 
 export function FeatureFlagForm({
@@ -16,7 +17,8 @@ export function FeatureFlagForm({
   onSubmit,
   isSubmitting,
   error,
-  mode
+  mode,
+  onFormChange
 }: FeatureFlagFormProps) {
   const [name, setName] = useState(flag?.name || '');
   const [description, setDescription] = useState(flag?.description || '');
@@ -31,8 +33,41 @@ export function FeatureFlagForm({
   const [environments, setEnvironments] = useState<{ id: string; name: string }[]>([]);
   const [newDependency, setNewDependency] = useState('');
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [hasChanges, setHasChanges] = useState(false);
 
   // Fetch environments
+  // Effect to check for form changes when in edit mode
+  useEffect(() => {
+    if (mode === 'edit' && flag) {
+      const isNameChanged = name !== flag.name;
+      const isDescriptionChanged = description !== flag.description;
+      const isEnabledChanged = enabled !== flag.enabled;
+      const isEnvironmentChanged = environment !== flag.environment;
+      const isOwnerChanged = owner !== flag.owner;
+      const isRolloutChanged = rolloutPercentage !== flag.rolloutPercentage;
+
+      // Check dependencies
+      const isDependenciesChanged =
+        (dependencies.length !== (flag.dependencies?.length || 0)) ||
+        dependencies.some((dep, i) => flag.dependencies?.[i] !== dep);
+
+      // Check expiration date
+      const currentExpiresAt = flag.expiresAt ? new Date(flag.expiresAt).toISOString().split('T')[0] : undefined;
+      const isExpiresAtChanged = expiresAt !== currentExpiresAt;
+
+      const formHasChanges = isNameChanged || isDescriptionChanged || isEnabledChanged ||
+                            isEnvironmentChanged || isOwnerChanged || isRolloutChanged ||
+                            isDependenciesChanged || isExpiresAtChanged;
+
+      setHasChanges(formHasChanges);
+
+      // Notify parent component if callback is provided
+      if (onFormChange) {
+        onFormChange(formHasChanges);
+      }
+    }
+  }, [mode, flag, name, description, enabled, environment, owner, rolloutPercentage, dependencies, expiresAt, onFormChange]);
+
   useEffect(() => {
     const fetchEnvironments = async () => {
       try {
@@ -280,8 +315,8 @@ export function FeatureFlagForm({
         <div className="pt-2">
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed"
+            disabled={isSubmitting || (mode === 'edit' && !hasChanges)}
+            className={`w-full flex justify-center py-2 px-4 border rounded-md shadow-sm text-sm font-medium ${mode === 'edit' && !hasChanges ? 'border-gray-300 text-gray-500 bg-gray-100 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600 cursor-not-allowed' : 'border-transparent text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'} disabled:opacity-60 disabled:cursor-not-allowed`}
           >
             {isSubmitting
               ? mode === 'create'
@@ -289,7 +324,9 @@ export function FeatureFlagForm({
                 : 'Updating...'
               : mode === 'create'
                 ? 'Create Feature Flag'
-                : 'Update Feature Flag'
+                : hasChanges
+                  ? 'Update Feature Flag'
+                  : 'No Changes to Save'
             }
           </button>
         </div>

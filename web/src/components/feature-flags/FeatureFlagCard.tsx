@@ -37,16 +37,17 @@ export function FeatureFlagCard({
 
   return (
     <Card variant="interactive" className="relative group border border-gray-200 dark:border-dark-600 p-4">
-      <Link
-        to={`/feature-flags/${id}`}
-        className="absolute inset-0 z-10 cursor-pointer"
-        aria-label={`Edit ${name} feature flag`}
-      >
-        <span className="sr-only">Edit</span>
-      </Link>
-      <div className="flex flex-col space-y-4 relative z-20">
+      <div className="flex flex-col space-y-4">
         <div className="flex justify-between items-center">
-          <CardTitle className="group-hover:text-primary-600 dark:group-hover:text-primary-600 transition-colors text-xl">{name}</CardTitle>
+          <Link
+            to={`/feature-flags/${id}`}
+            className="cursor-pointer"
+            aria-label={`Edit ${name} feature flag`}
+          >
+            <CardTitle className="group-hover:text-primary-600 dark:group-hover:text-primary-600 transition-colors text-xl">
+              {name}
+            </CardTitle>
+          </Link>
           <div onClick={(e) => e.stopPropagation()} className="relative z-30">
             <Toggle
               checked={enabled}
