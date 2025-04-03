@@ -1,0 +1,17 @@
+# Deno specific
+.deno/
+deno.lock
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE specific
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
