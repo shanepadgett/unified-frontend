@@ -1,6 +1,7 @@
 import { Application, Router, Context, Next } from "oak";
 import { oakCors } from "cors";
 import { featureFlagsRouter } from "./feature-flags/feature-flags.routes.ts";
+import { environmentsRouter } from "./environments/environments.routes.ts";
 
 // Create the Oak application
 const app = new Application();
@@ -50,6 +51,7 @@ router.get("/", (ctx: Context): void => {
 // API version prefix
 const apiRouter = new Router({ prefix: "/api" });
 apiRouter.use("/feature-flags", featureFlagsRouter.routes(), featureFlagsRouter.allowedMethods());
+apiRouter.use("/environments", environmentsRouter.routes(), environmentsRouter.allowedMethods());
 
 // Use routers
 app.use(router.routes());

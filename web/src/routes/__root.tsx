@@ -80,7 +80,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <div className="p-2 flex gap-2 text-lg">
+        <div className="p-2 flex gap-4 text-lg">
           <Link
             to="/"
             activeProps={{
@@ -88,7 +88,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             }}
             activeOptions={{ exact: true }}
           >
-            Home
+            Feature Flags
+          </Link>
+          <Link
+            to="/environments"
+            activeProps={{
+              className: 'font-bold',
+            }}
+          >
+            Environments
           </Link>
         </div>
         <hr />

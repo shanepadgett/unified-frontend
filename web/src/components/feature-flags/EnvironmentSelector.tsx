@@ -1,23 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { getEnvironments, Environment as EnvironmentType } from '../../api/environments.ts';
 
-export type Environment = 'development' | 'staging' | 'production' | 'dev' | 'prod';
+export type Environment = string;
 
 interface EnvironmentSelectorProps {
   selectedEnvironment: Environment;
   onChange: (environment: Environment) => void;
 }
 
-const environments: { id: Environment; name: string }[] = [
+// Fallback environments in case API call fails
+const fallbackEnvironments: { id: Environment; name: string }[] = [
   { id: 'development', name: 'Development' },
-  { id: 'dev', name: 'Development' },
   { id: 'staging', name: 'Staging' },
   { id: 'production', name: 'Production' },
-  { id: 'prod', name: 'Production' },
 ];
 
 export function EnvironmentSelector({ selectedEnvironment, onChange }: EnvironmentSelectorProps) {
+  const [environments, setEnvironments] = useState<{ id: Environment; name: string }[]>(fallbackEnvironments);
+  const [_isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEnvironments = async () => {
+      try {
+        const envData = await getEnvironments();
+        if (envData && envData.length > 0) {
+          const mappedEnvs = envData.map((env: EnvironmentType) => ({
+            id: env.name,
+            name: env.name.charAt(0).toUpperCase() + env.name.slice(1)
+          }));
+          setEnvironments(mappedEnvs);
+
+          // If the currently selected environment is not in the list, select the default one
+          if (!mappedEnvs.some((env: { id: string; name: string }) => env.id === selectedEnvironment)) {
+            const defaultEnv = envData.find((env: EnvironmentType) => env.isDefault);
+            if (defaultEnv) {
+              onChange(defaultEnv.name);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch environments:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEnvironments();
+  }, [selectedEnvironment, onChange]);
+
   const selected = environments.find((env) => env.id === selectedEnvironment) || environments[0];
 
   return (
