@@ -12,33 +12,12 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
-import { Route as UsersUserIdImport } from './routes/users.$userId'
-import { Route as PostsPostIdImport } from './routes/posts.$postId'
-import { Route as PostsPostIdDeepImport } from './routes/posts_.$postId.deep'
 
 // Create/Update Routes
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const UsersUserIdRoute = UsersUserIdImport.update({
-  id: '/users/$userId',
-  path: '/users/$userId',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const PostsPostIdRoute = PostsPostIdImport.update({
-  id: '/posts/$postId',
-  path: '/posts/$postId',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const PostsPostIdDeepRoute = PostsPostIdDeepImport.update({
-  id: '/posts_/$postId/deep',
-  path: '/posts/$postId/deep',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,27 +32,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/posts/$postId': {
-      id: '/posts/$postId'
-      path: '/posts/$postId'
-      fullPath: '/posts/$postId'
-      preLoaderRoute: typeof PostsPostIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/users/$userId': {
-      id: '/users/$userId'
-      path: '/users/$userId'
-      fullPath: '/users/$userId'
-      preLoaderRoute: typeof UsersUserIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/posts_/$postId/deep': {
-      id: '/posts_/$postId/deep'
-      path: '/posts/$postId/deep'
-      fullPath: '/posts/$postId/deep'
-      preLoaderRoute: typeof PostsPostIdDeepImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
@@ -81,52 +39,32 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/posts/$postId': typeof PostsPostIdRoute
-  '/users/$userId': typeof UsersUserIdRoute
-  '/posts/$postId/deep': typeof PostsPostIdDeepRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/posts/$postId': typeof PostsPostIdRoute
-  '/users/$userId': typeof UsersUserIdRoute
-  '/posts/$postId/deep': typeof PostsPostIdDeepRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/posts/$postId': typeof PostsPostIdRoute
-  '/users/$userId': typeof UsersUserIdRoute
-  '/posts_/$postId/deep': typeof PostsPostIdDeepRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/posts/$postId' | '/users/$userId' | '/posts/$postId/deep'
+  fullPaths: '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/posts/$postId' | '/users/$userId' | '/posts/$postId/deep'
-  id:
-    | '__root__'
-    | '/'
-    | '/posts/$postId'
-    | '/users/$userId'
-    | '/posts_/$postId/deep'
+  to: '/'
+  id: '__root__' | '/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  PostsPostIdRoute: typeof PostsPostIdRoute
-  UsersUserIdRoute: typeof UsersUserIdRoute
-  PostsPostIdDeepRoute: typeof PostsPostIdDeepRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  PostsPostIdRoute: PostsPostIdRoute,
-  UsersUserIdRoute: UsersUserIdRoute,
-  PostsPostIdDeepRoute: PostsPostIdDeepRoute,
 }
 
 export const routeTree = rootRoute
@@ -139,23 +77,11 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/posts/$postId",
-        "/users/$userId",
-        "/posts_/$postId/deep"
+        "/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/posts/$postId": {
-      "filePath": "posts.$postId.tsx"
-    },
-    "/users/$userId": {
-      "filePath": "users.$userId.tsx"
-    },
-    "/posts_/$postId/deep": {
-      "filePath": "posts_.$postId.deep.tsx"
     }
   }
 }
