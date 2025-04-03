@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Environment, updateEnvironment, deleteEnvironment } from '../../api/environments';
 import { useRouter } from '@tanstack/react-router';
+import { TextField, TextArea } from '../../components/ui/TextField';
 
 interface EnvironmentCardProps {
   environment: Environment;
@@ -63,27 +64,21 @@ export function EnvironmentCard({ environment, onUpdate }: EnvironmentCardProps)
       {isEditing ? (
         <div className="space-y-4">
           <div>
-            <label htmlFor={`name-${environment.id}`} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Name
-            </label>
-            <input
+            <TextField
               id={`name-${environment.id}`}
               type="text"
+              label="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
           </div>
           <div>
-            <label htmlFor={`description-${environment.id}`} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Description
-            </label>
-            <textarea
+            <TextArea
               id={`description-${environment.id}`}
+              label="Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
           </div>
           <div className="flex items-center">

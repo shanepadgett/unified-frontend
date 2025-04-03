@@ -10,38 +10,38 @@ export interface TextFieldProps extends Omit<React.InputHTMLAttributes<HTMLInput
    * @default 'default'
    */
   variant?: TextFieldVariant;
-  
+
   /**
    * Input size
    * @default 'md'
    */
   size?: TextFieldSize;
-  
+
   /**
    * Label for the input
    */
   label?: string;
-  
+
   /**
    * Helper text to display below the input
    */
   helperText?: string;
-  
+
   /**
    * Error message to display below the input
    */
   errorText?: string;
-  
+
   /**
    * Icon to display at the start of the input
    */
   startIcon?: React.ReactNode;
-  
+
   /**
    * Icon to display at the end of the input
    */
   endIcon?: React.ReactNode;
-  
+
   /**
    * Full width input
    * @default true
@@ -72,34 +72,34 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
   ) => {
     // Generate a unique ID if none is provided
     const inputId = id || `input-${Math.random().toString(36).substring(2, 9)}`;
-    
-    // Base styles for the input
-    const baseInputStyles = "rounded-md shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm";
-    
+
+    // Base styles for the input - standardized height and styling
+    const baseInputStyles = "rounded-md border shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm h-10";
+
     // Variant styles
     const variantStyles = {
       default: "border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white",
       error: "border-red-300 dark:border-red-700 dark:bg-gray-700 dark:text-white",
       success: "border-green-300 dark:border-green-700 dark:bg-gray-700 dark:text-white"
     };
-    
-    // Size styles
+
+    // Size styles - standardized padding for consistent appearance
     const sizeStyles = {
-      sm: "py-1 text-sm",
-      md: "py-2 text-sm",
-      lg: "py-3 text-base"
+      sm: "px-3 py-2 text-sm",
+      md: "px-3 py-2 text-sm",
+      lg: "px-4 py-2 text-base"
     };
-    
-    // Icon padding
+
+    // Icon padding - adjusted for consistent spacing
     const paddingLeft = startIcon ? "pl-10" : "pl-3";
     const paddingRight = endIcon ? "pr-10" : "pr-3";
-    
+
     // Width styles
     const widthStyles = fullWidth ? "w-full" : "";
-    
+
     // Disabled styles
     const disabledStyles = disabled ? "opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800" : "";
-    
+
     // Combine all styles
     const inputStyles = twMerge(
       baseInputStyles,
@@ -111,7 +111,7 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
       disabledStyles,
       className
     );
-    
+
     return (
       <div className={fullWidth ? "w-full" : ""}>
         {label && (
@@ -156,22 +156,22 @@ export interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
    * @default 'default'
    */
   variant?: TextFieldVariant;
-  
+
   /**
    * Label for the textarea
    */
   label?: string;
-  
+
   /**
    * Helper text to display below the textarea
    */
   helperText?: string;
-  
+
   /**
    * Error message to display below the textarea
    */
   errorText?: string;
-  
+
   /**
    * Full width textarea
    * @default true
@@ -200,23 +200,23 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ) => {
     // Generate a unique ID if none is provided
     const textareaId = id || `textarea-${Math.random().toString(36).substring(2, 9)}`;
-    
-    // Base styles for the textarea
-    const baseTextareaStyles = "block rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm";
-    
+
+    // Base styles for the textarea - standardized styling to match TextField
+    const baseTextareaStyles = "block rounded-md border shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm px-3 py-2";
+
     // Variant styles
     const variantStyles = {
       default: "border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white",
       error: "border-red-300 dark:border-red-700 dark:bg-gray-700 dark:text-white",
       success: "border-green-300 dark:border-green-700 dark:bg-gray-700 dark:text-white"
     };
-    
+
     // Width styles
     const widthStyles = fullWidth ? "w-full" : "";
-    
+
     // Disabled styles
     const disabledStyles = disabled ? "opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800" : "";
-    
+
     // Combine all styles
     const textareaStyles = twMerge(
       baseTextareaStyles,
@@ -225,7 +225,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
       disabledStyles,
       className
     );
-    
+
     return (
       <div className={fullWidth ? "w-full" : ""}>
         {label && (

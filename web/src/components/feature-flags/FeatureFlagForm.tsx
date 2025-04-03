@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FeatureFlag, CreateFeatureFlag, UpdateFeatureFlag } from '../../api/featureFlags';
 import { getEnvironments } from '../../api/environments';
+import { TextField, TextArea } from '../../components/ui/TextField';
 
 interface FeatureFlagFormProps {
   flag?: FeatureFlag;
@@ -37,7 +38,7 @@ export function FeatureFlagForm({
       try {
         const envs = await getEnvironments();
         setEnvironments(envs);
-        
+
         // Set default environment if creating a new flag and environments are available
         if (mode === 'create' && envs.length > 0 && !flag) {
           const defaultEnv = envs.find(env => env.isDefault);
@@ -60,7 +61,7 @@ export function FeatureFlagForm({
     if (!description.trim()) errors.description = 'Description is required';
     if (!environment) errors.environment = 'Environment is required';
     if (!owner.trim()) errors.owner = 'Owner is required';
-    
+
     if (rolloutPercentage !== undefined) {
       if (rolloutPercentage < 0 || rolloutPercentage > 100) {
         errors.rolloutPercentage = 'Rollout percentage must be between 0 and 100';
@@ -73,11 +74,11 @@ export function FeatureFlagForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     const formData: CreateFeatureFlag | UpdateFeatureFlag = {
       name: name.trim(),
       description: description.trim(),
@@ -117,52 +118,40 @@ export function FeatureFlagForm({
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
         {mode === 'create' ? 'Create New Feature Flag' : 'Edit Feature Flag'}
       </h2>
-      
+
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 mb-4">
           <p className="text-red-700 dark:text-red-200">{error}</p>
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Name *
-          </label>
-          <input
+          <TextField
             id="name"
             type="text"
+            label="Name *"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className={`mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-              formErrors.name ? 'border-red-300 dark:border-red-700' : 'border-gray-300 dark:border-gray-700'
-            }`}
+            variant={formErrors.name ? 'error' : 'default'}
+            errorText={formErrors.name}
             placeholder="e.g., new-feature, dark-mode"
           />
-          {formErrors.name && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{formErrors.name}</p>
-          )}
         </div>
-        
+
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Description *
-          </label>
-          <textarea
+          <TextArea
             id="description"
+            label="Description *"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className={`mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-              formErrors.description ? 'border-red-300 dark:border-red-700' : 'border-gray-300 dark:border-gray-700'
-            }`}
+            variant={formErrors.description ? 'error' : 'default'}
+            errorText={formErrors.description}
             placeholder="Describe the purpose of this feature flag"
           />
-          {formErrors.description && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{formErrors.description}</p>
-          )}
         </div>
-        
+
         <div className="flex items-center">
           <input
             id="enabled"
@@ -175,7 +164,7 @@ export function FeatureFlagForm({
             Enabled
           </label>
         </div>
-        
+
         <div>
           <label htmlFor="environment" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Environment *
@@ -184,7 +173,7 @@ export function FeatureFlagForm({
             id="environment"
             value={environment}
             onChange={(e) => setEnvironment(e.target.value)}
-            className={`mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
+            className={`mt-1 block w-full rounded-md border shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-white sm:text-sm h-10 px-3 py-2 ${
               formErrors.environment ? 'border-red-300 dark:border-red-700' : 'border-gray-300 dark:border-gray-700'
             }`}
           >
@@ -206,47 +195,35 @@ export function FeatureFlagForm({
             <p className="mt-1 text-sm text-red-600 dark:text-red-400">{formErrors.environment}</p>
           )}
         </div>
-        
+
         <div>
-          <label htmlFor="owner" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Owner *
-          </label>
-          <input
+          <TextField
             id="owner"
             type="text"
+            label="Owner *"
             value={owner}
             onChange={(e) => setOwner(e.target.value)}
-            className={`mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-              formErrors.owner ? 'border-red-300 dark:border-red-700' : 'border-gray-300 dark:border-gray-700'
-            }`}
+            variant={formErrors.owner ? 'error' : 'default'}
+            errorText={formErrors.owner}
             placeholder="e.g., Team Name or Person"
           />
-          {formErrors.owner && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{formErrors.owner}</p>
-          )}
         </div>
-        
+
         <div>
-          <label htmlFor="rolloutPercentage" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Rollout Percentage (0-100)
-          </label>
-          <input
+          <TextField
             id="rolloutPercentage"
             type="number"
+            label="Rollout Percentage (0-100)"
             min="0"
             max="100"
             value={rolloutPercentage === undefined ? '' : rolloutPercentage}
             onChange={(e) => setRolloutPercentage(e.target.value === '' ? undefined : Number(e.target.value))}
-            className={`mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-              formErrors.rolloutPercentage ? 'border-red-300 dark:border-red-700' : 'border-gray-300 dark:border-gray-700'
-            }`}
+            variant={formErrors.rolloutPercentage ? 'error' : 'default'}
+            errorText={formErrors.rolloutPercentage}
             placeholder="e.g., 50"
           />
-          {formErrors.rolloutPercentage && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{formErrors.rolloutPercentage}</p>
-          )}
         </div>
-        
+
         <div>
           <label htmlFor="dependencies" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Dependencies
@@ -257,7 +234,7 @@ export function FeatureFlagForm({
               type="text"
               value={newDependency}
               onChange={(e) => setNewDependency(e.target.value)}
-              className="block w-full rounded-l-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="block w-full rounded-l-md border border-gray-300 dark:border-gray-700 h-10 px-3 py-2 shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-white sm:text-sm"
               placeholder="Add dependency"
             />
             <button
@@ -289,20 +266,17 @@ export function FeatureFlagForm({
             </div>
           )}
         </div>
-        
+
         <div>
-          <label htmlFor="expiresAt" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Expires At
-          </label>
-          <input
+          <TextField
             id="expiresAt"
             type="date"
+            label="Expires At"
             value={expiresAt || ''}
             onChange={(e) => setExpiresAt(e.target.value || undefined)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           />
         </div>
-        
+
         <div className="pt-2">
           <button
             type="submit"

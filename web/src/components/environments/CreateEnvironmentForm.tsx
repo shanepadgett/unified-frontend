@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createEnvironment, CreateEnvironment } from '../../api/environments.ts';
+import { TextField, TextArea } from '../../components/ui/TextField';
 
 interface CreateEnvironmentFormProps {
   onSuccess: () => void;
@@ -64,29 +65,23 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Name
-          </label>
-          <input
+          <TextField
             id="name"
             type="text"
+            label="Name"
             value={name}
-            onChange={(e) => setName((e.target as HTMLInputElement).value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            onChange={(e) => setName(e.target.value)}
             placeholder="e.g., development, staging, production"
           />
         </div>
 
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Description
-          </label>
-          <textarea
+          <TextArea
             id="description"
+            label="Description"
             value={description}
-            onChange={(e) => setDescription((e.target as HTMLTextAreaElement).value)}
+            onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             placeholder="Describe the purpose of this environment"
           />
         </div>
@@ -96,7 +91,7 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
             id="isDefault"
             type="checkbox"
             checked={isDefault}
-            onChange={(e) => setIsDefault((e.target as HTMLInputElement).checked)}
+            onChange={(e) => setIsDefault(e.target.checked)}
             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-600"
           />
           <label htmlFor="isDefault" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
