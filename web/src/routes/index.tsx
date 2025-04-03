@@ -63,6 +63,7 @@ function FeatureFlagsPage() {
           <EnvironmentSelector
             selectedEnvironment={selectedEnvironment}
             onChange={setSelectedEnvironment}
+            className="w-[180px] h-[38px]"
           />
           <Link
             to="/feature-flags/create"

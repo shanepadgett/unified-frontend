@@ -7,6 +7,10 @@ export type Environment = string;
 interface EnvironmentSelectorProps {
   selectedEnvironment: Environment;
   onChange: (environment: Environment) => void;
+  /**
+   * Additional CSS classes to apply to the select
+   */
+  className?: string;
 }
 
 // Fallback environments in case API call fails
@@ -16,7 +20,7 @@ const fallbackEnvironments: SelectOption[] = [
   { id: 'production', name: 'Production' },
 ];
 
-export function EnvironmentSelector({ selectedEnvironment, onChange }: EnvironmentSelectorProps) {
+export function EnvironmentSelector({ selectedEnvironment, onChange, className }: EnvironmentSelectorProps) {
   const [environments, setEnvironments] = useState<SelectOption[]>(fallbackEnvironments);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -63,6 +67,7 @@ export function EnvironmentSelector({ selectedEnvironment, onChange }: Environme
       value={selectedOption}
       onChange={handleChange}
       isLoading={isLoading}
+      className={className}
     />
   );
 }
