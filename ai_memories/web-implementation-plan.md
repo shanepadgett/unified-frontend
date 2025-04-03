@@ -2,38 +2,58 @@
 
 ## Project Setup
 
-1. Initialize project
+1. Initialize TanStack Start project
 ```bash
-npm create vite@latest web -- --template react-ts
+# Create new TanStack Start project using basic example
+npx gitpick TanStack/router/tree/main/examples/react/start-basic-react-query web
 cd web
 npm install
 ```
 
 2. Essential Dependencies
 ```bash
-npm install @tanstack/react-query
-npm install tailwindcss postcss autoprefixer
 npm install @headlessui/react @heroicons/react
+npm install tailwindcss postcss autoprefixer
 ```
+
+## Initial Implementation
+
+1. Basic API Integration (1 hour)
+   - Set up server function for fetching feature flags
+   - Create simple route to display flags
+   - Test basic GET request functionality
+
+2. Core Components (2 hours)
+   - Build essential components
+   - Style with TailwindCSS
+   - Add basic interactions
+
+3. Data Integration (1 hour)
+   - Implement remaining queries/mutations
+   - Add loading states
+   - Error handling
+
+4. Polish & Demo Prep (30 min)
+   - Test all features
+   - Prepare for presentation
 
 ## Project Structure
 
 ```
 web/
-├── src/
-│   ├── api/
-│   │   ├── client.ts
-│   │   └── types.ts
+├── app/
+│   ├── routes/
+│   │   └── index.tsx        # Main feature flags page
 │   ├── components/
 │   │   ├── FeatureFlagCard.tsx
 │   │   ├── EnvironmentSelector.tsx
 │   │   ├── SearchInput.tsx
 │   │   └── ToggleSwitch.tsx
-│   ├── hooks/
-│   │   └── useFeatureFlags.ts
-│   ├── App.tsx
-│   └── main.tsx
-└── tailwind.config.js
+│   ├── api/
+│   │   └── featureFlags.ts  # Server functions
+│   ├── router.tsx
+│   └── ssr.tsx
+└── app.config.ts
 ```
 
 ## Core Components
@@ -55,49 +75,28 @@ web/
    - Toggle state
    - Loading indicator
 
-## Data Fetching
+## Server Functions Example
 
 ```typescript
-// Simple query hook
-const useFeatureFlags = (environment?: string) => {
-  return useQuery({
-    queryKey: ['flags', environment],
-    queryFn: () => api.getFeatureFlags(environment),
-  });
-};
+// app/api/featureFlags.ts
+import { createServerFn } from '@tanstack/react-start'
 
-// Toggle mutation
-const useToggleFlag = () => {
-  return useMutation({
-    mutationFn: (id: string) => api.toggleFlag(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['flags']);
-    },
-  });
-};
+export const getFeatureFlags = createServerFn({ 
+  method: 'GET' 
+}).handler(async () => {
+  const response = await fetch('http://localhost:8000/flags')
+  return response.json()
+})
+
+export const toggleFlag = createServerFn({ 
+  method: 'POST' 
+}).handler(async ({ data }) => {
+  const response = await fetch(`http://localhost:8000/flags/${data.id}/toggle`, {
+    method: 'POST'
+  })
+  return response.json()
+})
 ```
-
-## Implementation Steps
-
-1. Project Setup (30 min)
-   - Initialize project
-   - Configure TailwindCSS
-   - Set up React Query
-
-2. Core Components (2 hours)
-   - Build essential components
-   - Style with TailwindCSS
-   - Add basic interactions
-
-3. Data Integration (1 hour)
-   - Connect to Deno backend
-   - Implement queries/mutations
-   - Add loading states
-
-4. Polish & Demo Prep (30 min)
-   - Test all features
-   - Add error handling
-   - Prepare for presentation
 
 ## Demo Considerations
 
