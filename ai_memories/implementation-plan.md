@@ -12,28 +12,29 @@ The project will showcase how modern declarative UI frameworks share similar pat
 ## Core Technologies
 
 ### Backend
-- **GraphQL Server**: Apollo Server
-- **Database**: MongoDB with Mongoose (for persistence)
-- **Authentication**: JWT-based auth system
-- **Hosting**: Node.js server environment
+- **Framework**: NestJS with TypeScript
+- **Storage**: In-memory cache (no database required for demo)
+- **API Style**: REST with consistent endpoints
+- **Documentation**: Swagger/OpenAPI for automatic docs
+- **Authentication**: Simple JWT-based auth (optional for demo)
 
 ### Frontend Web
 - **Framework**: React with TypeScript
-- **State Management**: Apollo Client + React hooks
+- **State Management**: React Query for data fetching
 - **Styling**: Tailwind CSS for utility-first styling
 - **Component Library**: Custom components with consistent naming
 - **Build Tool**: Vite for fast development experience
 
 ### iOS
 - **Framework**: SwiftUI with Swift
-- **Networking**: Apollo iOS client
+- **Networking**: URLSession + Combine or Swift Concurrency (async/await)
 - **Architecture**: MVVM with ObservableObject
 - **Component Library**: Custom components with matching names to React/Compose
 - **Minimum iOS**: iOS 15+
 
 ### Android
 - **Framework**: Jetpack Compose with Kotlin
-- **Networking**: Apollo Kotlin client
+- **Networking**: Retrofit with coroutines or Ktor client
 - **Architecture**: ViewModel with StateFlow/MutableState
 - **Component Library**: Custom components with matching names to React/SwiftUI
 - **Minimum Android**: API 26+
@@ -43,29 +44,31 @@ The project will showcase how modern declarative UI frameworks share similar pat
 ### Feature Flag Entity
 ```
 FeatureFlag {
-  id: ID
-  name: String
-  description: String
-  enabled: Boolean
-  environment: String (dev/staging/prod)
+  id: string
+  name: string
+  description: string
+  enabled: boolean
+  environment: string (dev/staging/prod)
   lastModified: Date
-  owner: String
-  rolloutPercentage: Number (optional)
-  dependencies: [String] (optional)
-  expiresAt: Date (optional)
+  owner: string
+  rolloutPercentage?: number
+  dependencies?: string[]
+  expiresAt?: Date
 }
 ```
 
 ## Implementation Phases
 
-### Phase 1: GraphQL Schema & Backend
-1. Define GraphQL schema with types, queries, and mutations
-2. Set up Apollo Server with resolvers
-3. Connect to MongoDB for persistence
-4. Implement core business logic
-5. Set up authentication
-6. Create seed data
-7. Test API with GraphQL playground
+### Phase 1: Backend API with NestJS
+1. Set up NestJS project with TypeScript
+2. Define DTO (Data Transfer Object) classes for feature flags
+3. Create in-memory repository for flag storage
+4. Implement RESTful controllers for CRUD operations
+5. Add validation with class-validator
+6. Configure Swagger/OpenAPI documentation
+7. Implement simple authentication (optional)
+8. Create seed data for demo
+9. Test API endpoints
 
 ### Phase 2: Common Component Library Specifications
 1. Define shared component specifications across platforms
@@ -76,8 +79,9 @@ FeatureFlag {
 
 ### Phase 3: React Implementation
 1. Set up React project with Vite and TypeScript
-2. Configure Apollo Client and authentication
-3. Create core UI components with matching names to specification:
+2. Configure React Query for data fetching
+3. Create API client with TypeScript types shared from backend
+4. Create core UI components with matching names to specification:
    - `FeatureFlagCard`
    - `EnvironmentSelector`
    - `SearchInput`
@@ -85,15 +89,16 @@ FeatureFlag {
    - `FlagList`
    - `ErrorDisplay`
    - `LoadingIndicator`
-4. Implement feature flag dashboard container components
-5. Set up routing and navigation
-6. Add error handling and loading states
-7. Implement optimistic UI updates
+5. Implement feature flag dashboard container components
+6. Set up routing and navigation
+7. Add error handling and loading states
+8. Implement optimistic UI updates
 
 ### Phase 4: SwiftUI Implementation
 1. Set up SwiftUI project
-2. Configure Apollo iOS client
-3. Create core UI components with matching names to specification:
+2. Create Swift models matching backend DTOs
+3. Implement network layer with URLSession + Combine or async/await
+4. Create core UI components with matching names to specification:
    - `FeatureFlagCard`
    - `EnvironmentSelector`
    - `SearchInput`
@@ -101,15 +106,16 @@ FeatureFlag {
    - `FlagList`
    - `ErrorDisplay`
    - `LoadingIndicator`
-4. Create ViewModels for state management
-5. Implement navigation and routing
-6. Handle error states and loading
-7. Implement optimistic UI updates
+5. Create ViewModels for state management
+6. Implement navigation and routing
+7. Handle error states and loading
+8. Implement optimistic UI updates
 
 ### Phase 5: Jetpack Compose Implementation
 1. Set up Jetpack Compose project
-2. Configure Apollo Kotlin client
-3. Create core UI components with matching names to specification:
+2. Create Kotlin data classes matching backend DTOs
+3. Implement network layer with Retrofit or Ktor
+4. Create core UI components with matching names to specification:
    - `FeatureFlagCard`
    - `EnvironmentSelector`
    - `SearchInput`
@@ -117,10 +123,10 @@ FeatureFlag {
    - `FlagList`
    - `ErrorDisplay`
    - `LoadingIndicator`
-4. Create ViewModels for state management
-5. Implement navigation
-6. Handle error states and loading
-7. Implement optimistic UI updates
+5. Create ViewModels for state management
+6. Implement navigation
+7. Handle error states and loading
+8. Implement optimistic UI updates
 
 ### Phase 6: Integration and Testing
 1. Ensure all implementations connect to the same backend
@@ -128,30 +134,64 @@ FeatureFlag {
 3. Implement any missing features
 4. Perform cross-platform testing
 
+## NestJS Backend Implementation Details
+
+### Project Structure
+```
+src/
+├── main.ts                    # Entry point
+├── app.module.ts              # Main module
+├── feature-flags/
+│   ├── dto/
+│   │   ├── create-flag.dto.ts
+│   │   ├── update-flag.dto.ts
+│   │   └── feature-flag.dto.ts
+│   ├── feature-flags.service.ts
+│   ├── feature-flags.controller.ts
+│   └── feature-flags.module.ts
+└── shared/
+    ├── models/
+    ├── interfaces/
+    └── validators/
+```
+
+### API Endpoints
+
+| Method | Endpoint                          | Description                           |
+|--------|-----------------------------------|---------------------------------------|
+| GET    | /api/feature-flags                | Get all feature flags                 |
+| GET    | /api/feature-flags/:id            | Get a specific feature flag           |
+| GET    | /api/feature-flags/env/:environment | Get flags for a specific environment |
+| POST   | /api/feature-flags                | Create a new feature flag             |
+| PATCH  | /api/feature-flags/:id            | Update a feature flag                 |
+| DELETE | /api/feature-flags/:id            | Delete a feature flag                 |
+| PATCH  | /api/feature-flags/:id/toggle     | Toggle a feature flag's state         |
+
+### In-Memory Storage
+- Use a service with Map or Array to store feature flags
+- Implement CRUD operations on this in-memory store
+- Add helper methods for filtering/querying flags
+- Initialize with seed data for demo purposes
+
 ## Core Features to Implement
 
-1. **Authentication**
-   - Login screen
-   - Session management
-   - Logout functionality
-
-2. **Feature Flag List View**
+1. **Feature Flag List View**
    - List all feature flags
    - Filter by environment
    - Search functionality
    - Sorting options
 
-3. **Feature Flag Details**
+2. **Feature Flag Details**
    - View complete flag details
    - Toggle flag state
    - Edit flag properties
 
-4. **Flag Creation**
+3. **Flag Creation**
    - Form to create new flags
    - Validation
    - Success/error feedback
 
-5. **Environment Management**
+4. **Environment Management**
    - Switch between environments
    - Visual indicators for current environment
 
@@ -174,7 +214,7 @@ FeatureFlag {
 
 ### State Management
 - Use local state for UI-specific concerns
-- Use Apollo Client/GraphQL for shared data
+- Use API clients for data fetching
 - Document state transitions and side effects
 
 ## Styling Guidelines
@@ -210,10 +250,10 @@ src/
 │       └── ...
 ├── hooks/ (React) or state/ (SwiftUI/Compose)
 ├── models/
-├── graphql/
-│   ├── queries/
-│   ├── mutations/
-│   └── fragments/
+├── api/
+│   ├── client.ts/swift/kt
+│   ├── endpoints.ts/swift/kt
+│   └── types.ts/swift/kt
 └── utils/
 ```
 
@@ -229,7 +269,7 @@ Each component should be organized in its own directory with:
 1. **Unit Tests**
    - Test individual components
    - Test business logic
-   - Test GraphQL queries/mutations
+   - Test API client functions
 
 2. **Integration Tests**
    - Test component interactions
@@ -254,17 +294,34 @@ Each component should be organized in its own directory with:
    - Provide translation guidelines
 
 3. **API Documentation**
-   - Document GraphQL schema
-   - Provide usage examples
+   - Leverage automatic Swagger/OpenAPI documentation
    - Document authentication requirements
+   - Provide usage examples
+
+## Shared Types Strategy
+
+### TypeScript (Backend & React)
+- Export interface/type definitions from backend
+- Share types between backend and React frontend
+- Use DTOs for API request/response objects
+
+### Swift (iOS)
+- Generate Swift structs that match backend DTOs
+- Implement `Codable` protocol for JSON serialization
+- Use Swift's strong type system for compile-time checks
+
+### Kotlin (Android)
+- Create data classes that match backend DTOs
+- Use Kotlin serialization for JSON parsing
+- Leverage Kotlin's type system for safety
 
 ## AI Assistant Guidelines
 
 When implementing with AI assistance:
 
 1. **Schema-First Development**
-   - Start with the GraphQL schema
-   - Use the schema to drive UI components
+   - Start with NestJS DTOs and controllers
+   - Use these DTOs to drive frontend model creation
    - Ensure type safety across implementations
 
 2. **Component Mapping Prompts**
@@ -303,26 +360,35 @@ When implementing with AI assistance:
 3. **Error Handling**
    - Network errors
    - Validation errors
-   - Authentication errors
+   - Display appropriate error messages
 
-4. **Performance Optimization**
-   - Pagination
-   - Lazy loading
-   - Caching
+4. **Optimistic Updates**
+   - Show immediate UI feedback before API completes
+   - Handle rollback on errors
+   - Provide success feedback
 
 ## Resources and References
 
-1. **Apollo GraphQL**
-   - [Apollo Server](https://www.apollographql.com/docs/apollo-server/)
-   - [Apollo Client (React)](https://www.apollographql.com/docs/react/)
-   - [Apollo iOS](https://www.apollographql.com/docs/ios/)
-   - [Apollo Kotlin](https://www.apollographql.com/docs/kotlin/)
+1. **NestJS**
+   - [NestJS Documentation](https://docs.nestjs.com/)
+   - [NestJS TypeScript starter](https://github.com/nestjs/typescript-starter)
+   - [NestJS Swagger module](https://docs.nestjs.com/openapi/introduction)
 
-2. **UI Frameworks**
+2. **React**
    - [React Documentation](https://react.dev)
-   - [SwiftUI Documentation](https://developer.apple.com/documentation/swiftui/)
-   - [Jetpack Compose Documentation](https://developer.android.com/jetpack/compose)
+   - [React Query (TanStack Query)](https://tanstack.com/query/latest)
+   - [Tailwind CSS](https://tailwindcss.com/docs)
 
-3. **Feature Flag Concepts**
+3. **SwiftUI**
+   - [SwiftUI Documentation](https://developer.apple.com/documentation/swiftui/)
+   - [Swift Concurrency (async/await)](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
+   - [Combine Framework](https://developer.apple.com/documentation/combine)
+
+4. **Jetpack Compose**
+   - [Jetpack Compose Documentation](https://developer.android.com/jetpack/compose)
+   - [Retrofit](https://square.github.io/retrofit/)
+   - [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
+
+5. **Feature Flag Concepts**
    - [Feature Flags Best Practices](https://launchdarkly.com/blog/best-practices-feature-flag-governance/)
    - [Feature Toggles (Feature Flags)](https://martinfowler.com/articles/feature-toggles.html)
