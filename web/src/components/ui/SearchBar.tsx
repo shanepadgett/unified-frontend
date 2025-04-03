@@ -54,7 +54,7 @@ export function SearchBar({
     onChange('');
   };
 
-  const baseStyles = "block w-full rounded-md border border-gray-300 dark:border-gray-700 h-10 px-3 py-2 pl-10 pr-10 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm";
+  const baseStyles = "block w-full rounded-md border border-gray-300 dark:border-dark-600 h-10 px-3 py-2 pl-10 pr-10 text-gray-900 dark:text-gray-100 bg-white dark:bg-dark-800 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm";
   const disabledStyles = disabled ? "opacity-50 cursor-not-allowed" : "";
 
   const searchBarStyles = twMerge(

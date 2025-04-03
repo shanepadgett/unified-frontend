@@ -8,12 +8,12 @@
   }
 
   * {
-    @apply border-gray-200 dark:border-gray-800;
+    @apply border-gray-200 dark:border-dark-600;
   }
 
   html,
   body {
-    @apply text-gray-900 bg-gray-50 dark:bg-gray-950 dark:text-gray-200;
+    @apply text-gray-900 bg-gray-50 dark:bg-dark-900 dark:text-gray-200;
   }
 
   .using-mouse * {

@@ -9,35 +9,35 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
    * @default 'default'
    */
   variant?: CardVariant;
-  
+
   /**
    * Whether to add padding inside the card
    * @default true
    */
   withPadding?: boolean;
-  
+
   /**
    * Card header content
    */
   header?: React.ReactNode;
-  
+
   /**
    * Card footer content
    */
   footer?: React.ReactNode;
-  
+
   /**
    * Whether the card is clickable/interactive
    * @default false
    */
   isClickable?: boolean;
-  
+
   /**
    * URL to navigate to when the card is clicked
    * Only applicable when isClickable is true
    */
   to?: string;
-  
+
   /**
    * Function to call when the card is clicked
    * Only applicable when isClickable is true
@@ -64,23 +64,23 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ) => {
     // Base styles for the card
     const baseStyles = "rounded-lg";
-    
+
     // Variant styles
     const variantStyles = {
-      default: "bg-white dark:bg-gray-800 shadow",
-      elevated: "bg-white dark:bg-gray-800 shadow-md",
-      outlined: "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700",
-      interactive: "bg-white dark:bg-gray-800 shadow group hover:shadow-md transition-shadow"
+      default: "bg-white dark:bg-dark-800 shadow",
+      elevated: "bg-white dark:bg-dark-800 shadow-md",
+      outlined: "bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600",
+      interactive: "bg-white dark:bg-dark-800 shadow group hover:shadow-md transition-shadow"
     };
-    
+
     // Padding styles
     const paddingStyles = withPadding ? "p-4" : "";
-    
+
     // Interactive styles
-    const interactiveStyles = isClickable 
-      ? "cursor-pointer relative" 
+    const interactiveStyles = isClickable
+      ? "cursor-pointer relative"
       : "";
-    
+
     // Combine all styles
     const cardStyles = twMerge(
       baseStyles,
@@ -89,7 +89,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       interactiveStyles,
       className
     );
-    
+
     return (
       <div
         ref={ref}
@@ -136,7 +136,7 @@ export const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
     ref
   ) => {
     const Component = as;
-    
+
     const baseStyles = "font-medium text-gray-900 dark:text-white";
     const sizeStyles = {
       h1: "text-2xl",
@@ -146,13 +146,13 @@ export const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
       h5: "text-sm",
       h6: "text-xs"
     };
-    
+
     const titleStyles = twMerge(
       baseStyles,
       sizeStyles[as],
       className
     );
-    
+
     return (
       <Component
         ref={ref}
@@ -185,7 +185,7 @@ export const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescri
       "mt-1 text-sm text-gray-500 dark:text-gray-400",
       className
     );
-    
+
     return (
       <p
         ref={ref}
@@ -218,7 +218,7 @@ export const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
       "mt-2",
       className
     );
-    
+
     return (
       <div
         ref={ref}
@@ -260,13 +260,13 @@ export const CardActions = React.forwardRef<HTMLDivElement, CardActionsProps>(
       right: "justify-end",
       between: "justify-between"
     };
-    
+
     const actionsStyles = twMerge(
       "flex items-center mt-4 space-x-2",
       alignStyles[align],
       className
     );
-    
+
     return (
       <div
         ref={ref}

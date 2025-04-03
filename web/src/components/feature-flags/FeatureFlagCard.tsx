@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
-import { Card, CardTitle, CardDescription, CardContent } from '../../components/ui/Card.tsx';
+import { Card, CardTitle, CardDescription } from '../../components/ui/Card.tsx';
 import { Badge } from '../../components/ui/Badge.tsx';
 import { Toggle } from '../../components/ui/Toggle.tsx';
 import { Text } from '../../components/ui/Typography.tsx';
@@ -36,7 +36,7 @@ export function FeatureFlagCard({
     : null;
 
   return (
-    <Card variant="interactive" className="relative group border border-gray-200 dark:border-gray-700">
+    <Card variant="interactive" className="relative group border border-gray-200 dark:border-dark-600 p-4">
       <Link
         to={`/feature-flags/${id}`}
         className="absolute inset-0 z-10 cursor-pointer"
@@ -44,32 +44,35 @@ export function FeatureFlagCard({
       >
         <span className="sr-only">Edit</span>
       </Link>
-      <div className="flex justify-between items-start relative z-20">
-        <div>
-          <CardTitle className="group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{name}</CardTitle>
-          <CardDescription>{description}</CardDescription>
-          <CardContent className="mt-2 flex flex-wrap gap-2">
-            <Badge variant="info">{environment}</Badge>
-            {owner && (
-              <Badge variant="secondary">{owner}</Badge>
-            )}
-            {rolloutPercentage !== undefined && (
-              <Badge variant="success">{rolloutPercentage}% rollout</Badge>
-            )}
-          </CardContent>
-          {formattedDate && (
-            <Text size="xs" variant="muted" className="mt-2">
-              Last modified: {formattedDate}
-            </Text>
+      <div className="flex flex-col space-y-4 relative z-20">
+        <div className="flex justify-between items-center">
+          <CardTitle className="group-hover:text-primary-600 dark:group-hover:text-primary-600 transition-colors text-xl">{name}</CardTitle>
+          <div onClick={(e) => e.stopPropagation()} className="relative z-30">
+            <Toggle
+              checked={enabled}
+              onChange={(checked: boolean) => onToggle(id, checked)}
+              isLoading={isLoading}
+            />
+          </div>
+        </div>
+
+        <CardDescription className="text-sm">{description}</CardDescription>
+
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="info">{environment}</Badge>
+          {owner && (
+            <Badge variant="secondary">{owner}</Badge>
+          )}
+          {rolloutPercentage !== undefined && (
+            <Badge variant="success">{rolloutPercentage}% rollout</Badge>
           )}
         </div>
-        <div onClick={(e) => e.stopPropagation()} className="relative z-30">
-          <Toggle
-            checked={enabled}
-            onChange={(checked: boolean) => onToggle(id, checked)}
-            isLoading={isLoading}
-          />
-        </div>
+
+        {formattedDate && (
+          <Text size="xs" variant="muted">
+            Last modified: {formattedDate}
+          </Text>
+        )}
       </div>
     </Card>
   );

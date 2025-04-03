@@ -7,41 +7,41 @@ export interface ToggleProps {
    * Whether the toggle is checked/enabled
    */
   checked: boolean;
-  
+
   /**
    * Callback function when the toggle state changes
    */
   onChange: (checked: boolean) => void;
-  
+
   /**
    * Whether the toggle is in a loading state
    * @default false
    */
   isLoading?: boolean;
-  
+
   /**
    * Label to display next to the toggle
    */
   label?: string;
-  
+
   /**
    * Screen reader label for accessibility
    * @default 'Toggle'
    */
   srLabel?: string;
-  
+
   /**
    * Position of the label relative to the toggle
    * @default 'left'
    */
   labelPosition?: 'left' | 'right';
-  
+
   /**
    * Whether the toggle is disabled
    * @default false
    */
   disabled?: boolean;
-  
+
   /**
    * Additional CSS classes to apply to the toggle
    */
@@ -62,28 +62,28 @@ export function Toggle({
   className,
 }: ToggleProps) {
   const isDisabled = disabled || isLoading;
-  
-  const toggleBaseStyles = "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2";
-  const toggleEnabledStyles = checked ? "bg-indigo-600" : "bg-gray-200 dark:bg-gray-700";
+
+  const toggleBaseStyles = "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2";
+  const toggleEnabledStyles = checked ? "bg-primary-600" : "bg-gray-200 dark:bg-gray-700";
   const toggleDisabledStyles = isDisabled ? "opacity-50 cursor-not-allowed" : "";
-  
+
   const toggleStyles = twMerge(
     toggleBaseStyles,
     toggleEnabledStyles,
     toggleDisabledStyles,
     className
   );
-  
+
   const knobBaseStyles = "inline-block h-4 w-4 transform rounded-full bg-white transition-transform";
   const knobPositionStyles = checked ? "translate-x-6" : "translate-x-1";
   const knobLoadingStyles = isLoading ? "animate-pulse" : "";
-  
+
   const knobStyles = twMerge(
     knobBaseStyles,
     knobPositionStyles,
     knobLoadingStyles
   );
-  
+
   return (
     <Switch.Group>
       <div className="flex items-center">
@@ -116,33 +116,33 @@ export interface CheckboxProps {
    * Whether the checkbox is checked
    */
   checked: boolean;
-  
+
   /**
    * Callback function when the checkbox state changes
    */
   onChange: (checked: boolean) => void;
-  
+
   /**
    * Label to display next to the checkbox
    */
   label?: string;
-  
+
   /**
    * Whether the checkbox is disabled
    * @default false
    */
   disabled?: boolean;
-  
+
   /**
    * ID for the checkbox input
    */
   id?: string;
-  
+
   /**
    * Additional CSS classes to apply to the checkbox
    */
   className?: string;
-  
+
   /**
    * Helper text to display below the checkbox
    */
@@ -163,16 +163,16 @@ export function Checkbox({
 }: CheckboxProps) {
   // Generate a unique ID if none is provided
   const checkboxId = id || `checkbox-${Math.random().toString(36).substring(2, 9)}`;
-  
+
   const checkboxBaseStyles = "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-600";
   const checkboxDisabledStyles = disabled ? "opacity-50 cursor-not-allowed" : "";
-  
+
   const checkboxStyles = twMerge(
     checkboxBaseStyles,
     checkboxDisabledStyles,
     className
   );
-  
+
   return (
     <div className="flex items-start">
       <div className="flex items-center h-5">

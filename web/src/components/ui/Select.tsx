@@ -108,7 +108,7 @@ export function Select({
       )}
       <Listbox value={selectedOption} onChange={onChange} disabled={isDisabled}>
         <div className="relative">
-          <Listbox.Button className="relative w-full cursor-default rounded-md bg-white dark:bg-gray-800 px-4 py-2 text-left shadow-sm border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm min-w-[180px] flex items-center">
+          <Listbox.Button className="relative w-full cursor-default rounded-md bg-white dark:bg-dark-800 px-4 py-2 text-left shadow-sm border border-gray-300 dark:border-dark-600 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-primary-600 sm:text-sm min-w-[180px] flex items-center">
             {isLoading ? (
               <div className="flex items-center">
                 <svg
@@ -153,7 +153,7 @@ export function Select({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-gray-800 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-dark-800 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {options.map((option) => (
                 <Listbox.Option
                   key={option.id}
@@ -163,7 +163,7 @@ export function Select({
                     twMerge(
                       "relative cursor-default select-none py-2 pl-10 pr-4",
                       active
-                        ? "bg-indigo-100 dark:bg-indigo-900 text-indigo-900 dark:text-indigo-100"
+                        ? "bg-primary-600/10 dark:bg-primary-600/20 text-primary-700 dark:text-primary-600"
                         : "text-gray-900 dark:text-gray-100",
                       disabled && "opacity-50 cursor-not-allowed"
                     )
@@ -183,7 +183,7 @@ export function Select({
                         {option.name}
                       </span>
                       {selected ? (
-                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-indigo-600 dark:text-indigo-400">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-600 dark:text-primary-600">
                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
                         </span>
                       ) : null}
