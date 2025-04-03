@@ -2,7 +2,7 @@ import React from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
-export type Environment = 'development' | 'staging' | 'production';
+export type Environment = 'development' | 'staging' | 'production' | 'dev' | 'prod';
 
 interface EnvironmentSelectorProps {
   selectedEnvironment: Environment;
@@ -11,8 +11,10 @@ interface EnvironmentSelectorProps {
 
 const environments: { id: Environment; name: string }[] = [
   { id: 'development', name: 'Development' },
+  { id: 'dev', name: 'Development' },
   { id: 'staging', name: 'Staging' },
   { id: 'production', name: 'Production' },
+  { id: 'prod', name: 'Production' },
 ];
 
 export function EnvironmentSelector({ selectedEnvironment, onChange }: EnvironmentSelectorProps) {

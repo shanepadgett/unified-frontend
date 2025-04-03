@@ -1,7 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import React, { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { getFeatureFlags, toggleFeatureFlag, type FeatureFlag } from '../api/featureFlags.ts'
+import {
+  getFeatureFlagsByEnvironment,
+  toggleFeatureFlag,
+  type FeatureFlag
+} from '../api/featureFlags.ts'
 
 // Import components individually
 import { FeatureFlagCard } from '../components/feature-flags/FeatureFlagCard.tsx'
@@ -15,12 +19,12 @@ export const Route = createFileRoute('/')({
 function FeatureFlagsPage() {
   const queryClient = useQueryClient()
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedEnvironment, setSelectedEnvironment] = useState<Environment>('development')
+  const [selectedEnvironment, setSelectedEnvironment] = useState<Environment>('dev')
 
-  // Fetch feature flags
+  // Fetch feature flags by environment
   const { data: featureFlags = [], isLoading, error } = useQuery<FeatureFlag[]>({
-    queryKey: ['featureFlags'],
-    queryFn: () => getFeatureFlags(),
+    queryKey: ['featureFlags', selectedEnvironment],
+    queryFn: () => getFeatureFlagsByEnvironment({ data: selectedEnvironment }),
   })
 
   // Toggle feature flag mutation
@@ -30,13 +34,12 @@ function FeatureFlagsPage() {
     },
     onSuccess: () => {
       // Invalidate and refetch feature flags after toggling
-      queryClient.invalidateQueries({ queryKey: ['featureFlags'] })
+      queryClient.invalidateQueries({ queryKey: ['featureFlags', selectedEnvironment] })
     },
   })
 
-  // Filter feature flags by environment and search term
+  // Filter feature flags by search term only (environment filtering is done server-side)
   const filteredFlags = featureFlags
-    .filter((flag: FeatureFlag) => flag.environment === selectedEnvironment)
     .filter((flag: FeatureFlag) =>
       flag.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       flag.description.toLowerCase().includes(searchTerm.toLowerCase())
@@ -94,6 +97,9 @@ function FeatureFlagsPage() {
               description={flag.description}
               enabled={flag.enabled}
               environment={flag.environment}
+              owner={flag.owner}
+              lastModified={flag.lastModified}
+              rolloutPercentage={flag.rolloutPercentage}
               onToggle={handleToggle}
               isLoading={toggleMutation.isPending && toggleMutation.variables?.id === flag.id}
             />

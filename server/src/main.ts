@@ -58,6 +58,6 @@ app.use(router.allowedMethods());
 app.use(apiRouter.allowedMethods());
 
 // Start the server
-const port = 3000;
+const port = 3001;
 console.log(`Server running on http://localhost:${port}`);
 await app.listen({ port });
