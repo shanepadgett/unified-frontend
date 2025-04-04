@@ -1,48 +1,19 @@
-// Feature Flag model
-export interface FeatureFlag {
-  id: string;
-  name: string;
-  description: string;
-  enabled: boolean;
-  environment: string; // dev/staging/prod
-  lastModified: Date;
-  owner: string;
-  rolloutPercentage?: number;
-  dependencies?: string[];
-  expiresAt?: Date;
-}
+import { CreateFeatureFlag, UpdateFeatureFlag } from "../models/feature-flag.model.ts";
+import { BadRequestError } from "../../../core/errors/base-error.ts";
 
-// Create Feature Flag DTO
-export interface CreateFeatureFlag {
-  name: string;
-  description: string;
-  enabled: boolean;
-  environment: string;
-  owner: string;
-  rolloutPercentage?: number;
-  dependencies?: string[];
-  expiresAt?: string;
-}
-
-// Update Feature Flag DTO
-export interface UpdateFeatureFlag {
-  name?: string;
-  description?: string;
-  enabled?: boolean;
-  environment?: string;
-  owner?: string;
-  rolloutPercentage?: number;
-  dependencies?: string[];
-  expiresAt?: string;
-}
-
-// Validation result interface
+/**
+ * Validation result interface
+ */
 export interface ValidationResult {
   isValid: boolean;
   errors: string[];
 }
 
-// Validation function for CreateFeatureFlag
+/**
+ * Validates a CreateFeatureFlag DTO
+ * @param data The data to validate
+ * @returns Validation result
+ */
 export function validateCreateFeatureFlag(data: unknown): ValidationResult {
   const errors: string[] = [];
 
@@ -108,7 +79,11 @@ export function validateCreateFeatureFlag(data: unknown): ValidationResult {
   };
 }
 
-// Validation function for UpdateFeatureFlag
+/**
+ * Validates an UpdateFeatureFlag DTO
+ * @param data The data to validate
+ * @returns Validation result
+ */
 export function validateUpdateFeatureFlag(data: unknown): ValidationResult {
   const errors: string[] = [];
 
@@ -128,6 +103,7 @@ export function validateUpdateFeatureFlag(data: unknown): ValidationResult {
   if (record.environment !== undefined && typeof record.environment !== "string") errors.push("Environment must be a string");
   if (record.owner !== undefined && typeof record.owner !== "string") errors.push("Owner must be a string");
 
+  // Optional fields validation
   if (record.rolloutPercentage !== undefined) {
     if (typeof record.rolloutPercentage !== "number") {
       errors.push("Rollout percentage must be a number");
@@ -164,4 +140,32 @@ export function validateUpdateFeatureFlag(data: unknown): ValidationResult {
     isValid: errors.length === 0,
     errors,
   };
+}
+
+/**
+ * Validates a CreateFeatureFlag DTO and throws a BadRequestError if invalid
+ * @param data The data to validate
+ * @returns The validated data as CreateFeatureFlag
+ * @throws BadRequestError if validation fails
+ */
+export function validateAndParseCreateFeatureFlag(data: unknown): CreateFeatureFlag {
+  const validation = validateCreateFeatureFlag(data);
+  if (!validation.isValid) {
+    throw new BadRequestError("Validation failed", validation.errors);
+  }
+  return data as CreateFeatureFlag;
+}
+
+/**
+ * Validates an UpdateFeatureFlag DTO and throws a BadRequestError if invalid
+ * @param data The data to validate
+ * @returns The validated data as UpdateFeatureFlag
+ * @throws BadRequestError if validation fails
+ */
+export function validateAndParseUpdateFeatureFlag(data: unknown): UpdateFeatureFlag {
+  const validation = validateUpdateFeatureFlag(data);
+  if (!validation.isValid) {
+    throw new BadRequestError("Validation failed", validation.errors);
+  }
+  return data as UpdateFeatureFlag;
 }

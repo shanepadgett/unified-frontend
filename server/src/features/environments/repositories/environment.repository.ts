@@ -1,14 +1,24 @@
-import { Environment, CreateEnvironment, UpdateEnvironment } from "./environment.model.ts";
+import { Environment, CreateEnvironment, UpdateEnvironment } from "../models/environment.model.ts";
+import { NotFoundError, ConflictError } from "../../../core/errors/base-error.ts";
 
-class EnvironmentsService {
+/**
+ * Repository for environments
+ * Handles data access operations for environments
+ */
+export class EnvironmentRepository {
   private environments: Map<string, Environment> = new Map();
 
+  /**
+   * Initializes the repository with seed data
+   */
   constructor() {
-    // Initialize with seed data
     this.seedData();
   }
 
-  private seedData() {
+  /**
+   * Seeds the repository with initial data
+   */
+  private seedData(): void {
     const seedEnvironments: Environment[] = [
       {
         id: crypto.randomUUID(),
@@ -41,22 +51,36 @@ class EnvironmentsService {
     });
   }
 
+  /**
+   * Finds all environments
+   * @returns Array of all environments
+   */
   findAll(): Environment[] {
     return Array.from(this.environments.values());
   }
 
-  findOne(id: string): Environment | null {
+  /**
+   * Finds an environment by ID
+   * @param id The environment ID
+   * @returns The environment or null if not found
+   */
+  findById(id: string): Environment | null {
     return this.environments.get(id) || null;
   }
 
-  findByName(name: string): Environment | null {
-    return this.findAll().find((env) => env.name.toLowerCase() === name.toLowerCase()) || null;
-  }
-
+  /**
+   * Finds the default environment
+   * @returns The default environment or null if none is set
+   */
   findDefault(): Environment | null {
     return this.findAll().find((env) => env.isDefault) || null;
   }
 
+  /**
+   * Creates a new environment
+   * @param createEnvDto The environment data
+   * @returns The created environment
+   */
   create(createEnvDto: CreateEnvironment): Environment {
     // If this environment is set as default, unset any existing default
     if (createEnvDto.isDefault) {
@@ -75,9 +99,18 @@ class EnvironmentsService {
     return newEnvironment;
   }
 
-  update(id: string, updateEnvDto: UpdateEnvironment): Environment | null {
-    const existingEnv = this.findOne(id);
-    if (!existingEnv) return null;
+  /**
+   * Updates an environment
+   * @param id The environment ID
+   * @param updateEnvDto The update data
+   * @returns The updated environment
+   * @throws NotFoundError if the environment is not found
+   */
+  update(id: string, updateEnvDto: UpdateEnvironment): Environment {
+    const existingEnv = this.findById(id);
+    if (!existingEnv) {
+      throw new NotFoundError(`Environment with ID ${id} not found`);
+    }
     
     // If this environment is being set as default, unset any existing default
     if (updateEnvDto.isDefault && !existingEnv.isDefault) {
@@ -94,17 +127,26 @@ class EnvironmentsService {
     return updatedEnv;
   }
 
+  /**
+   * Removes an environment
+   * @param id The environment ID
+   * @returns true if the environment was removed
+   * @throws ConflictError if trying to remove the default environment
+   */
   remove(id: string): boolean {
-    const env = this.findOne(id);
+    const env = this.findById(id);
     
     // Don't allow removing the default environment
     if (env && env.isDefault) {
-      return false;
+      throw new ConflictError("Cannot remove the default environment");
     }
     
     return this.environments.delete(id);
   }
 
+  /**
+   * Unsets the default environment
+   */
   private unsetDefaultEnvironment(): void {
     const defaultEnv = this.findDefault();
     if (defaultEnv) {
@@ -115,4 +157,4 @@ class EnvironmentsService {
 }
 
 // Create a singleton instance
-export const environmentsService = new EnvironmentsService();
+export const environmentRepository = new EnvironmentRepository();

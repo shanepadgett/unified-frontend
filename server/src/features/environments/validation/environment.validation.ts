@@ -1,34 +1,19 @@
-// Environment model
-export interface Environment {
-  id: string;
-  name: string;
-  description: string;
-  isDefault: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { CreateEnvironment, UpdateEnvironment } from "../models/environment.model.ts";
+import { BadRequestError } from "../../../core/errors/base-error.ts";
 
-// Create Environment DTO
-export interface CreateEnvironment {
-  name: string;
-  description: string;
-  isDefault?: boolean;
-}
-
-// Update Environment DTO
-export interface UpdateEnvironment {
-  name?: string;
-  description?: string;
-  isDefault?: boolean;
-}
-
-// Validation result interface
+/**
+ * Validation result interface
+ */
 export interface ValidationResult {
   isValid: boolean;
   errors: string[];
 }
 
-// Validation function for CreateEnvironment
+/**
+ * Validates a CreateEnvironment DTO
+ * @param data The data to validate
+ * @returns Validation result
+ */
 export function validateCreateEnvironment(data: unknown): ValidationResult {
   const errors: string[] = [];
 
@@ -56,7 +41,11 @@ export function validateCreateEnvironment(data: unknown): ValidationResult {
   };
 }
 
-// Validation function for UpdateEnvironment
+/**
+ * Validates an UpdateEnvironment DTO
+ * @param data The data to validate
+ * @returns Validation result
+ */
 export function validateUpdateEnvironment(data: unknown): ValidationResult {
   const errors: string[] = [];
 
@@ -78,4 +67,32 @@ export function validateUpdateEnvironment(data: unknown): ValidationResult {
     isValid: errors.length === 0,
     errors,
   };
+}
+
+/**
+ * Validates a CreateEnvironment DTO and throws a BadRequestError if invalid
+ * @param data The data to validate
+ * @returns The validated data as CreateEnvironment
+ * @throws BadRequestError if validation fails
+ */
+export function validateAndParseCreateEnvironment(data: unknown): CreateEnvironment {
+  const validation = validateCreateEnvironment(data);
+  if (!validation.isValid) {
+    throw new BadRequestError("Validation failed", validation.errors);
+  }
+  return data as CreateEnvironment;
+}
+
+/**
+ * Validates an UpdateEnvironment DTO and throws a BadRequestError if invalid
+ * @param data The data to validate
+ * @returns The validated data as UpdateEnvironment
+ * @throws BadRequestError if validation fails
+ */
+export function validateAndParseUpdateEnvironment(data: unknown): UpdateEnvironment {
+  const validation = validateUpdateEnvironment(data);
+  if (!validation.isValid) {
+    throw new BadRequestError("Validation failed", validation.errors);
+  }
+  return data as UpdateEnvironment;
 }

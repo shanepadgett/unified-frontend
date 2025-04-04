@@ -1,41 +1,20 @@
-import { Application, Router, Context, Next } from "oak";
+import { Application, Router, Context } from "oak";
 import { oakCors } from "cors";
-import { featureFlagsRouter } from "./feature-flags/feature-flags.routes.ts";
-import { environmentsRouter } from "./environments/environments.routes.ts";
+
+// Import core components
+import { errorHandlerMiddleware, loggerMiddleware } from "./core/index.ts";
+
+// Import feature controllers
+import { featureFlagController } from "./features/feature-flags/index.ts";
+import { environmentController } from "./features/environments/index.ts";
 
 // Create the Oak application
 const app = new Application();
 const router = new Router();
 
-// Logger middleware
-app.use(async (ctx: Context, next: Next): Promise<void> => {
-  await next();
-  const rt = ctx.response.headers.get("X-Response-Time");
-  console.log(`${ctx.request.method} ${ctx.request.url} - ${rt}`);
-});
-
-// Timing middleware
-app.use(async (ctx: Context, next: Next): Promise<void> => {
-  const start = Date.now();
-  await next();
-  const ms = Date.now() - start;
-  ctx.response.headers.set("X-Response-Time", `${ms}ms`);
-});
-
-// Error handling middleware
-app.use(async (ctx: Context, next: Next): Promise<void> => {
-  try {
-    await next();
-  } catch (err: unknown) {
-    const error = err as Error & { status?: number };
-    ctx.response.status = error.status || 500;
-    ctx.response.body = {
-      success: false,
-      message: error.message || "Internal Server Error",
-    };
-    console.error(error);
-  }
-});
+// Apply global middleware
+app.use(errorHandlerMiddleware);
+app.use(loggerMiddleware);
 
 // Enable CORS
 app.use(oakCors());
@@ -50,8 +29,8 @@ router.get("/", (ctx: Context): void => {
 
 // API version prefix
 const apiRouter = new Router({ prefix: "/api" });
-apiRouter.use("/feature-flags", featureFlagsRouter.routes(), featureFlagsRouter.allowedMethods());
-apiRouter.use("/environments", environmentsRouter.routes(), environmentsRouter.allowedMethods());
+apiRouter.use("/feature-flags", featureFlagController.router.routes(), featureFlagController.router.allowedMethods());
+apiRouter.use("/environments", environmentController.router.routes(), environmentController.router.allowedMethods());
 
 // Use routers
 app.use(router.routes());
