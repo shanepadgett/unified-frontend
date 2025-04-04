@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, TextArea, Button } from '@features/shared/components';
+import { TextField, TextArea, Button, Card, CardTitle, Text } from '@features/shared/components';
 import { createEnvironment } from '../api/environments';
 
 interface CreateEnvironmentFormProps {
@@ -15,21 +15,21 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim()) {
       setError('Name is required');
       return;
     }
-    
+
     if (!description.trim()) {
       setError('Description is required');
       return;
     }
-    
+
     try {
       setIsSubmitting(true);
       setError(null);
-      
+
       await createEnvironment({
         data: {
           name,
@@ -37,12 +37,12 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
           isDefault
         }
       });
-      
+
       // Reset form
       setName('');
       setDescription('');
       setIsDefault(false);
-      
+
       // Notify parent component
       onSuccess();
     } catch (err) {
@@ -54,43 +54,48 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-      <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Create New Environment</h2>
-      
+    <Card variant="default" className="mb-6">
+      <div className="mb-4">
+        <CardTitle className="text-xl">Create New Environment</CardTitle>
+        <Text variant="muted" size="sm" className="mt-1">
+          Create a new environment for your feature flags
+        </Text>
+      </div>
+
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4 mb-4">
-          <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
+          <Text variant="danger" size="sm">{error}</Text>
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <TextField
           label="Name"
           id="environment-name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setName(e.currentTarget.value)}
           placeholder="e.g., Production, Staging, Development"
           required
           disabled={isSubmitting}
         />
-        
+
         <TextArea
           label="Description"
           id="environment-description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => setDescription(e.currentTarget.value)}
           placeholder="Describe the purpose of this environment"
           rows={3}
           required
           disabled={isSubmitting}
         />
-        
+
         <div className="flex items-center">
           <input
             id="is-default"
             type="checkbox"
             checked={isDefault}
-            onChange={(e) => setIsDefault(e.target.checked)}
+            onChange={(e) => setIsDefault(e.currentTarget.checked)}
             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-600"
             disabled={isSubmitting}
           />
@@ -98,7 +103,7 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
             Set as default environment
           </label>
         </div>
-        
+
         <div className="flex justify-end">
           <Button
             type="submit"
@@ -110,6 +115,6 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
           </Button>
         </div>
       </form>
-    </div>
+    </Card>
   );
 }

@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { useRouter } from '@tanstack/react-router';
-import { TextField, TextArea } from '@features/shared/components';
-import { Environment } from '../types';
+import {
+  TextField,
+  TextArea,
+  Card,
+  CardTitle,
+  CardDescription,
+  Badge,
+  Text,
+  Button
+} from '@features/shared/components';
+import { Environment } from '../types/index';
 import { updateEnvironment, deleteEnvironment } from '../api/environments';
 
 interface EnvironmentCardProps {
@@ -15,7 +23,6 @@ export function EnvironmentCard({ environment, onUpdate }: EnvironmentCardProps)
   const [description, setDescription] = useState(environment.description);
   const [isDefault, setIsDefault] = useState(environment.isDefault);
   const [isDeleting, setIsDeleting] = useState(false);
-  const router = useRouter();
 
   const handleUpdate = async () => {
     try {
@@ -60,8 +67,14 @@ export function EnvironmentCard({ environment, onUpdate }: EnvironmentCardProps)
     setIsEditing(false);
   };
 
+  // Format dates
+  const formattedCreatedDate = new Date(environment.createdAt).toLocaleDateString() + ' ' +
+    new Date(environment.createdAt).toLocaleTimeString();
+  const formattedUpdatedDate = new Date(environment.updatedAt).toLocaleDateString() + ' ' +
+    new Date(environment.updatedAt).toLocaleTimeString();
+
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-4">
+    <Card variant="interactive" className="relative group border border-gray-200 dark:border-dark-600 p-4 mb-4">
       {isEditing ? (
         <div className="space-y-4">
           <div>
@@ -70,7 +83,7 @@ export function EnvironmentCard({ environment, onUpdate }: EnvironmentCardProps)
               type="text"
               label="Name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setName(e.currentTarget.value)}
             />
           </div>
           <div>
@@ -78,7 +91,7 @@ export function EnvironmentCard({ environment, onUpdate }: EnvironmentCardProps)
               id={`description-${environment.id}`}
               label="Description"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.currentTarget.value)}
               rows={3}
             />
           </div>
@@ -87,7 +100,7 @@ export function EnvironmentCard({ environment, onUpdate }: EnvironmentCardProps)
               id={`default-${environment.id}`}
               type="checkbox"
               checked={isDefault}
-              onChange={(e) => setIsDefault(e.target.checked)}
+              onChange={(e) => setIsDefault(e.currentTarget.checked)}
               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-600"
             />
             <label htmlFor={`default-${environment.id}`} className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
@@ -95,58 +108,72 @@ export function EnvironmentCard({ environment, onUpdate }: EnvironmentCardProps)
             </label>
           </div>
           <div className="flex justify-end space-x-2">
-            <button
+            <Button
               onClick={handleCancel}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
+              variant="secondary"
+              size="md"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleUpdate}
-              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              variant="primary"
+              size="md"
             >
               Save
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
-        <>
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">{environment.name}</h3>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{environment.description}</p>
-              {environment.isDefault && (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 mt-2">
-                  Default
-                </span>
-              )}
+        <div className="flex flex-col space-y-4">
+          <div className="flex justify-between items-center">
+            <div
+              className="cursor-pointer"
+              onClick={() => setIsEditing(true)}
+              aria-label={`Edit ${environment.name} environment`}
+            >
+              <CardTitle className="group-hover:text-primary-600 dark:group-hover:text-primary-600 transition-colors text-xl">
+                {environment.name}
+              </CardTitle>
             </div>
             <div className="flex space-x-2">
-              <button
+              <Button
                 onClick={() => setIsEditing(true)}
-                className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                variant="secondary"
+                size="sm"
               >
                 Edit
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleDelete}
                 disabled={environment.isDefault || isDeleting}
-                className={`inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
-                  environment.isDefault
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
-                }`}
+                variant="danger"
+                size="sm"
+                isLoading={isDeleting}
               >
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </button>
+                Delete
+              </Button>
             </div>
           </div>
-          <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            <p>Created: {new Date(environment.createdAt).toLocaleString()}</p>
-            <p>Last Updated: {new Date(environment.updatedAt).toLocaleString()}</p>
+
+          <CardDescription className="text-sm">{environment.description}</CardDescription>
+
+          <div className="flex flex-wrap gap-2">
+            {environment.isDefault && (
+              <Badge variant="success">Default</Badge>
+            )}
           </div>
-        </>
+
+          <div className="flex flex-col space-y-1">
+            <Text size="xs" variant="muted">
+              Created: {formattedCreatedDate}
+            </Text>
+            <Text size="xs" variant="muted">
+              Last Updated: {formattedUpdatedDate}
+            </Text>
+          </div>
+        </div>
       )}
-    </div>
+    </Card>
   );
 }
