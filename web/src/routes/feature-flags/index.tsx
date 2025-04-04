@@ -1,10 +1,2 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { Outlet } from '@tanstack/react-router';
-
-export const Route = createFileRoute('/feature-flags/')({
-  component: FeatureFlagsLayout,
-});
-
-function FeatureFlagsLayout() {
-  return <Outlet />;
-}
+// This file is a proxy to the actual route in the feature directory
+export { Route } from '../../features/feature-flags/routes/_index';

@@ -58,16 +58,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       disabled,
       ...props
     },
-    ref
+    _ref
   ) => {
     const baseStyles = "inline-flex items-center justify-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2";
 
     const variantStyles = {
-      primary: "text-white bg-primary-600 hover:bg-primary-700 focus:ring-primary-600 border border-transparent disabled:bg-primary-600/70",
-      secondary: "text-gray-700 dark:text-gray-300 bg-white dark:bg-dark-700 border border-gray-300 dark:border-dark-600 hover:bg-gray-50 dark:hover:bg-dark-600 focus:ring-primary-600",
-      danger: "text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 border border-transparent disabled:bg-red-400",
-      success: "text-white bg-emerald-500 hover:bg-emerald-600 focus:ring-emerald-500 border border-transparent disabled:bg-emerald-400",
-      link: "text-primary-600 hover:text-primary-700 focus:ring-primary-600 border-none shadow-none"
+      primary: "text-white bg-primary-600 hover:bg-primary-700 focus:ring-primary-600 border border-transparent disabled:bg-gray-600 disabled:text-gray-300 disabled:border-gray-700 disabled:cursor-not-allowed",
+      secondary: "text-gray-700 dark:text-gray-300 bg-white dark:bg-dark-700 border border-gray-300 dark:border-dark-600 hover:bg-gray-50 dark:hover:bg-dark-600 focus:ring-primary-600 disabled:bg-gray-200 disabled:text-gray-500 dark:disabled:bg-dark-800 dark:disabled:text-gray-600 disabled:cursor-not-allowed",
+      danger: "text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 border border-transparent disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed",
+      success: "text-white bg-emerald-500 hover:bg-emerald-600 focus:ring-emerald-500 border border-transparent disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed",
+      link: "text-primary-600 hover:text-primary-700 focus:ring-primary-600 border-none shadow-none disabled:text-gray-500 dark:disabled:text-gray-600 disabled:cursor-not-allowed"
     };
 
     const sizeStyles = {
@@ -91,7 +91,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <button
-        ref={ref}
+        ref={_ref}
         className={buttonStyles}
         disabled={disabled || isLoading}
         {...props}
@@ -160,16 +160,16 @@ export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
       disabled,
       ...props
     },
-    ref
+    _ref
   ) => {
     const baseStyles = "inline-flex items-center justify-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2";
 
     const variantStyles = {
-      primary: "text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 border border-transparent",
-      secondary: "text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 focus:ring-indigo-500",
+      primary: "text-white bg-primary-600 hover:bg-primary-700 focus:ring-primary-600 border border-transparent",
+      secondary: "text-gray-700 dark:text-gray-300 bg-white dark:bg-dark-700 border border-gray-300 dark:border-dark-600 hover:bg-gray-50 dark:hover:bg-dark-600 focus:ring-primary-600",
       danger: "text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 border border-transparent",
       success: "text-white bg-emerald-500 hover:bg-emerald-600 focus:ring-emerald-500 border border-transparent",
-      link: "text-indigo-600 hover:text-indigo-500 focus:ring-indigo-500 border-none shadow-none"
+      link: "text-primary-600 hover:text-primary-700 focus:ring-primary-600 border-none shadow-none"
     };
 
     const sizeStyles = {
@@ -181,7 +181,7 @@ export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
     const widthStyles = fullWidth ? "w-full" : "";
 
     const loadingStyles = isLoading ? "opacity-80 cursor-not-allowed" : "";
-    const disabledStyles = disabled ? "opacity-60 cursor-not-allowed pointer-events-none" : "";
+    const disabledStyles = disabled ? "bg-gray-600 text-gray-300 border-gray-700 cursor-not-allowed pointer-events-none" : "";
 
     const linkStyles = twMerge(
       baseStyles,

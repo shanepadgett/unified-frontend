@@ -25,20 +25,20 @@ export class FeatureFlagController {
     // Get feature flags by environment
     this.router.get("/env/:environment", this.getFeatureFlagsByEnvironment.bind(this));
 
-    // Get a specific feature flag
-    this.router.get("/:id", this.getFeatureFlagById.bind(this));
+    // Get a specific feature flag - using a regex to ensure id doesn't match other routes
+    this.router.get("/:id([0-9a-f-]+)", this.getFeatureFlagById.bind(this));
 
     // Create a new feature flag
     this.router.post("/", this.createFeatureFlag.bind(this));
 
     // Update a feature flag
-    this.router.patch("/:id", this.updateFeatureFlag.bind(this));
+    this.router.patch("/:id([0-9a-f-]+)", this.updateFeatureFlag.bind(this));
 
     // Toggle a feature flag
-    this.router.patch("/:id/toggle", this.toggleFeatureFlag.bind(this));
+    this.router.patch("/:id([0-9a-f-]+)/toggle", this.toggleFeatureFlag.bind(this));
 
     // Delete a feature flag
-    this.router.delete("/:id", this.deleteFeatureFlag.bind(this));
+    this.router.delete("/:id([0-9a-f-]+)", this.deleteFeatureFlag.bind(this));
   }
 
   /**
@@ -53,7 +53,7 @@ export class FeatureFlagController {
    * Gets feature flags by environment
    * @param ctx The context
    */
-  private getFeatureFlagsByEnvironment(ctx: RouterContext<"/env/:environment">): void {
+  private getFeatureFlagsByEnvironment(ctx: RouterContext<string>): void {
     const environment = ctx.params.environment;
     if (!environment) {
       throw new BadRequestError("Environment parameter is required");
@@ -66,7 +66,7 @@ export class FeatureFlagController {
    * Gets a feature flag by ID
    * @param ctx The context
    */
-  private getFeatureFlagById(ctx: RouterContext<"/:id">): void {
+  private getFeatureFlagById(ctx: RouterContext<string>): void {
     const id = ctx.params.id;
     if (!id) {
       throw new BadRequestError("ID parameter is required");
@@ -88,7 +88,7 @@ export class FeatureFlagController {
 
     const createFlagDto = await body.value;
     const validatedDto = validateAndParseCreateFeatureFlag(createFlagDto);
-    
+
     const newFlag = featureFlagService.create(validatedDto);
     ctx.response.status = Status.Created;
     ctx.response.body = newFlag;
@@ -98,7 +98,7 @@ export class FeatureFlagController {
    * Updates a feature flag
    * @param ctx The context
    */
-  private async updateFeatureFlag(ctx: RouterContext<"/:id">): Promise<void> {
+  private async updateFeatureFlag(ctx: RouterContext<string>): Promise<void> {
     const id = ctx.params.id;
     if (!id) {
       throw new BadRequestError("ID parameter is required");
@@ -112,7 +112,7 @@ export class FeatureFlagController {
 
     const updateFlagDto = await body.value;
     const validatedDto = validateAndParseUpdateFeatureFlag(updateFlagDto);
-    
+
     const updatedFlag = featureFlagService.update(id, validatedDto);
     ctx.response.body = updatedFlag;
   }
@@ -121,7 +121,7 @@ export class FeatureFlagController {
    * Toggles a feature flag
    * @param ctx The context
    */
-  private toggleFeatureFlag(ctx: RouterContext<"/:id/toggle">): void {
+  private toggleFeatureFlag(ctx: RouterContext<string>): void {
     const id = ctx.params.id;
     if (!id) {
       throw new BadRequestError("ID parameter is required");
@@ -135,7 +135,7 @@ export class FeatureFlagController {
    * Deletes a feature flag
    * @param ctx The context
    */
-  private deleteFeatureFlag(ctx: RouterContext<"/:id">): void {
+  private deleteFeatureFlag(ctx: RouterContext<string>): void {
     const id = ctx.params.id;
     if (!id) {
       throw new BadRequestError("ID parameter is required");

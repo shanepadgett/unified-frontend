@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { createEnvironment, CreateEnvironment } from '../../api/environments.ts';
-import { TextField, TextArea } from '../../components/ui/TextField';
+import { TextField, TextArea, Button } from '@features/shared/components';
+import { createEnvironment } from '../api/environments';
 
 interface CreateEnvironmentFormProps {
   onSuccess: () => void;
@@ -15,34 +15,34 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     if (!name.trim()) {
       setError('Name is required');
       return;
     }
-
+    
     if (!description.trim()) {
       setError('Description is required');
       return;
     }
-
+    
     try {
       setIsSubmitting(true);
       setError(null);
-
-      const envData: CreateEnvironment = {
-        name: name.trim(),
-        description: description.trim(),
-        isDefault,
-      };
-
-      await createEnvironment({ data: envData });
-
+      
+      await createEnvironment({
+        data: {
+          name,
+          description,
+          isDefault
+        }
+      });
+      
       // Reset form
       setName('');
       setDescription('');
       setIsDefault(false);
-
+      
       // Notify parent component
       onSuccess();
     } catch (err) {
@@ -55,58 +55,59 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Create New Environment</h2>
-
+      <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Create New Environment</h2>
+      
       {error && (
-        <div className="bg-red-50 dark:bg-red-900 border-l-4 border-red-500 p-4 mb-4">
-          <p className="text-red-700 dark:text-red-200">{error}</p>
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4 mb-4">
+          <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
         </div>
       )}
-
+      
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <TextField
-            id="name"
-            type="text"
-            label="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g., development, staging, production"
-          />
-        </div>
-
-        <div>
-          <TextArea
-            id="description"
-            label="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={3}
-            placeholder="Describe the purpose of this environment"
-          />
-        </div>
-
+        <TextField
+          label="Name"
+          id="environment-name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="e.g., Production, Staging, Development"
+          required
+          disabled={isSubmitting}
+        />
+        
+        <TextArea
+          label="Description"
+          id="environment-description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Describe the purpose of this environment"
+          rows={3}
+          required
+          disabled={isSubmitting}
+        />
+        
         <div className="flex items-center">
           <input
-            id="isDefault"
+            id="is-default"
             type="checkbox"
             checked={isDefault}
             onChange={(e) => setIsDefault(e.target.checked)}
             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-600"
+            disabled={isSubmitting}
           />
-          <label htmlFor="isDefault" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+          <label htmlFor="is-default" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
             Set as default environment
           </label>
         </div>
-
-        <div className="pt-2">
-          <button
+        
+        <div className="flex justify-end">
+          <Button
             type="submit"
+            variant="primary"
+            isLoading={isSubmitting}
             disabled={isSubmitting}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Creating...' : 'Create Environment'}
-          </button>
+            Create Environment
+          </Button>
         </div>
       </form>
     </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Select, type SelectOption } from '../../components/ui/Select.tsx';
-import { getEnvironments, Environment as EnvironmentType } from '../../api/environments.ts';
+import { Select, type SelectOption } from '@features/shared/components';
+import { getEnvironments, Environment as EnvironmentType } from '@features/environments/api/environments';
 
 export type Environment = string;
 

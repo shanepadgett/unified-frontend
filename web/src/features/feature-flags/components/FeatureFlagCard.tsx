@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
-import { Card, CardTitle, CardDescription } from '../../components/ui/Card.tsx';
-import { Badge } from '../../components/ui/Badge.tsx';
-import { Toggle } from '../../components/ui/Toggle.tsx';
-import { Text } from '../../components/ui/Typography.tsx';
+import { Card, CardTitle, CardDescription, Badge, Toggle, Text } from '@features/shared/components';
 
 interface FeatureFlagCardProps {
   id: string;

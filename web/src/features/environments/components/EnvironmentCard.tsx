@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Environment, updateEnvironment, deleteEnvironment } from '../../api/environments';
 import { useRouter } from '@tanstack/react-router';
-import { TextField, TextArea } from '../../components/ui/TextField';
+import { TextField, TextArea } from '@features/shared/components';
+import { Environment } from '../types';
+import { updateEnvironment, deleteEnvironment } from '../api/environments';
 
 interface EnvironmentCardProps {
   environment: Environment;
