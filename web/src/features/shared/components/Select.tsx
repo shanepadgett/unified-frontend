@@ -149,11 +149,14 @@ export function Select({
           </Listbox.Button>
           <Transition
             as={React.Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="opacity-0 translate-y-1"
+            enterTo="opacity-100 translate-y-0"
             leave="transition ease-in duration-100"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-dark-800 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <Listbox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white/95 dark:bg-dark-800/95 py-1 text-base shadow-xl border-2 border-gray-200 dark:border-dark-500 focus:outline-none sm:text-sm backdrop-blur-sm">
               {options.map((option) => (
                 <Listbox.Option
                   key={option.id}
@@ -163,7 +166,7 @@ export function Select({
                     twMerge(
                       "relative cursor-default select-none py-2 pl-10 pr-4",
                       active
-                        ? "bg-primary-600/10 dark:bg-primary-600/20 text-primary-700 dark:text-primary-600"
+                        ? "bg-primary-600/15 dark:bg-primary-600/30 text-primary-700 dark:text-primary-600 shadow-sm"
                         : "text-gray-900 dark:text-gray-100",
                       disabled && "opacity-50 cursor-not-allowed"
                     )
@@ -184,7 +187,7 @@ export function Select({
                       </span>
                       {selected ? (
                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-600 dark:text-primary-600">
-                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                          <CheckIcon className="h-5 w-5 drop-shadow-sm" aria-hidden="true" />
                         </span>
                       ) : null}
                     </>
