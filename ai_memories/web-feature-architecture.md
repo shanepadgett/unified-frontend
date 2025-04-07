@@ -1,7 +1,7 @@
 # Feature-Based Architecture for React Web Applications
 
 ## Overview
-This document outlines a feature-based architectural approach for React web applications, optimizing for AI assistance, maintainability, and clear domain boundaries.
+This document outlines a feature-based architectural approach for React web applications, emphasizing component-driven development with minimal abstractions. The architecture optimizes for AI assistance, maintainability, and clear domain boundaries while following the unified cross-platform patterns.
 
 ## Directory Structure
 ```
@@ -9,325 +9,388 @@ src/
 ├── features/
 │   ├── [FeatureName]/
 │   │   ├── components/     # Feature-specific React components
-│   │   ├── hooks/         # Custom React hooks
-│   │   ├── api/           # API integration and data fetching
-│   │   ├── stores/        # State management (e.g., Zustand stores)
+│   │   ├── screens/        # Main feature screens/views
+│   │   ├── environment.ts  # Feature-level environment values
 │   │   ├── types/         # TypeScript definitions
 │   │   ├── utils/         # Feature-specific utilities
-│   │   └── tests/         # Component and integration tests
-│   └── shared/            # Cross-feature components and utilities
-├── core/                  # Application core setup
-│   ├── api/               # Base API configuration
-│   ├── router/            # Router configuration
-│   ├── styles/            # Global styles
-│   └── providers/         # Global providers
-└── types/                 # Global type definitions
+│   │   ├── tests/         # Component and integration tests
+│   │   └── README.md      # Feature documentation
+│   └── shared/
+│       ├── ui/            # Shared UI components
+│       └── utils/         # Shared utilities
+├── core/
+│   ├── environment/       # Global environment values
+│   ├── services/         # Global services (analytics, networking)
+│   └── config/           # App configuration
+└── types/                # Global type definitions
 ```
 
-## Key Benefits
+## Core Principles
 
-### 1. AI Integration Optimization
-- Reduced token usage through clear feature boundaries
-- Easier for AI to understand complete feature context
-- Simplified code generation with consistent patterns
-- Better code completion due to clear organization
+1. **Component-First Development**
+   - Soft limit of 100 lines per component
+   - Local state management within components
+   - Clear section organization
+   - Minimal external dependencies
 
-### 2. Development Benefits
-- Clear feature boundaries
-- Consistent patterns across features
-- Easy to locate related code
-- Better testability with co-located tests
-- Simplified state management
+2. **State Management**
+   - Prefer component-local state
+   - Use environment values for shared state
+   - Avoid global state stores
+   - Clear data flow patterns
 
-### 3. Maintenance Benefits
-- Reduced cognitive load
-- Clear impact assessment
-- Simplified dependency management
-- Better code discovery
-- Minimized cross-feature coupling
+3. **Component Patterns**
 
-## Implementation Guidelines
-
-### 1. Feature Organization
+### Standard Component Template
 ```typescript
-// features/auth/components/LoginForm.tsx
-export const LoginForm = () => {
-  const { login } = useAuth();
-  // Component implementation
+/**
+ * @component ComponentName
+ * @description Brief description of component purpose
+ * @environment [List of environment values used]
+ */
+
+// == Types ==
+interface ComponentNameProps {
+  // Direct props only - no deep prop drilling
 }
 
-// features/auth/hooks/useAuth.ts
-export const useAuth = () => {
-  // Hook implementation
-}
+// == Component ==
+export const ComponentName: React.FC<ComponentNameProps> = ({ prop1, prop2 }) => {
+  // == Environment ==
+  const environmentValue = useContext(FeatureEnvironmentKey)
 
-// features/auth/api/authApi.ts
-export const authApi = {
-  login: async (credentials) => {
-    // API implementation
+  // == State ==
+  const [localState, setLocalState] = useState(initialValue)
+
+  // == Computed ==
+  const computedValue = useMemo(() => {
+    // Derived state calculations
+  }, [dependencies])
+
+  // == Handlers ==
+  const handleAction = () => {
+    // Event handling logic
   }
+
+  // == Effects ==
+  useEffect(() => {
+    // Side effects
+  }, [dependencies])
+
+  // == View ==
+  return (
+    <div>
+      {/* Component JSX */}
+    </div>
+  )
 }
 ```
 
-### 2. State Management
+### Environment Values Pattern
 ```typescript
-// features/auth/stores/authStore.ts
-import { create } from 'zustand'
-
-export const useAuthStore = create((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
-}))
-```
-
-### 3. Feature Types
-```typescript
-// features/auth/types/index.ts
-export interface User {
-  id: string;
-  email: string;
+// features/[FeatureName]/environment.ts
+export const FeatureEnvironment = {
+  SomeValue: createContext<Type>(defaultValue),
+  AnotherValue: createContext<Type>(defaultValue),
 }
 
-export interface LoginCredentials {
-  email: string;
-  password: string;
+// features/[FeatureName]/FeatureProvider.tsx
+export const FeatureProvider: React.FC = ({ children }) => {
+  return (
+    <FeatureEnvironment.SomeValue.Provider value={someValue}>
+      {children}
+    </FeatureEnvironment.SomeValue.Provider>
+  )
 }
 ```
 
-## Configuration Requirements
+## Pattern Breaking Guidelines
 
-### 1. Vite Configuration
+### When to Use Global State
+1. Authentication state
+2. Feature flags
+3. App-wide theme settings
+4. Real-time notifications
+5. Network status
+
+### When to Allow Component API Calls
+1. Form submissions
+2. Real-time data updates
+3. Websocket connections
+4. File uploads
+5. Complex data transformations
+
+### When to Exceed Line Limit
+1. Complex form validation
+2. Rich text editors
+3. Data visualization components
+4. Interactive maps
+5. Complex animations
+
+### When to Use External State Management
+1. Complex multi-step forms
+2. Shopping carts
+3. Document editors
+4. Real-time collaboration features
+5. Complex undo/redo functionality
+
+## Implementation Examples
+
+### Basic Component
 ```typescript
-// vite.config.ts
-export default defineConfig({
-  resolve: {
-    alias: {
-      '@features': '/src/features',
-      '@core': '/src/core',
-      '@types': '/src/types'
-    }
+/**
+ * @component UserAvatar
+ * @description Displays user avatar with optional status indicator
+ */
+
+interface UserAvatarProps {
+  imageUrl: string
+  size?: 'sm' | 'md' | 'lg'
+  showStatus?: boolean
+}
+
+export const UserAvatar: React.FC<UserAvatarProps> = ({
+  imageUrl,
+  size = 'md',
+  showStatus = false
+}) => {
+  // == Computed ==
+  const dimensions = useMemo(() => ({
+    sm: 24,
+    md: 32,
+    lg: 48
+  }[size]), [size])
+
+  // == View ==
+  return (
+    <div className={`avatar-${size}`}>
+      <img
+        src={imageUrl}
+        width={dimensions}
+        height={dimensions}
+        alt="User avatar"
+      />
+      {showStatus && <StatusIndicator />}
+    </div>
+  )
+}
+```
+
+### Component with Environment Values
+```typescript
+/**
+ * @component UserSettings
+ * @description User settings form with theme support
+ * @environment ThemeContext, UserPreferencesContext
+ */
+
+export const UserSettings: React.FC = () => {
+  // == Environment ==
+  const { theme, setTheme } = useContext(ThemeContext)
+  const { preferences } = useContext(UserPreferencesContext)
+
+  // == State ==
+  const [localPreferences, setLocalPreferences] = useState(preferences)
+
+  // == Handlers ==
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    // Handle form submission
   }
-})
+
+  // == View ==
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Form fields */}
+    </form>
+  )
+}
 ```
 
-### 2. TypeScript Configuration
-```json
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@features/*": ["src/features/*"],
-      "@core/*": ["src/core/*"],
-      "@types/*": ["src/types/*"]
-    }
-  }
-}
+## Testing Strategy
+
+1. **Component Tests**
+   - Test component rendering
+   - Test user interactions
+   - Test state changes
+   - Mock environment values
+
+2. **Integration Tests**
+   - Test component composition
+   - Test feature workflows
+   - Test environment integration
+
+3. **Test Location**
+```
+features/
+└── [FeatureName]/
+    └── tests/
+        ├── components/     # Component-specific tests
+        ├── integration/    # Feature integration tests
+        └── utils/          # Utility function tests
 ```
 
 ## Best Practices
 
-1. Feature Independence
-   - Features should be self-contained
-   - Minimize cross-feature dependencies
-   - Use shared components for common UI elements
+1. **Component Design**
+   - Keep components focused
+   - Use clear section comments
+   - Document environment dependencies
+   - Follow naming conventions
 
-2. State Management
-   - Keep state close to where it's used
-   - Use global state sparingly
-   - Consider feature-specific stores
+2. **State Management**
+   - Prefer local state
+   - Use environment values for sharing
+   - Document state dependencies
+   - Clear update patterns
 
-3. Testing Strategy
-   - Co-locate tests with features
-   - Test components in isolation
-   - Use integration tests for feature workflows
+3. **Testing**
+   - Test component behavior
+   - Mock environment values
+   - Test edge cases
+   - Validate accessibility
 
-4. Code Organization
-   - Clear file naming conventions
-   - Consistent directory structure
-   - Document feature dependencies
+4. **Documentation**
+   - Clear component descriptions
+   - Document environment usage
+   - Example usage
+   - Props documentation
 
 ## Example Feature: User Management
 
-```
+```typescript
+// features/users/environment.ts
+export const UserEnvironment = {
+  CurrentUser: createContext<User | null>(null),
+  UserPreferences: createContext<UserPreferences>(defaultPreferences),
+  UserActions: createContext<UserActions>(defaultActions)
+}
+
+// Structure
 features/users/
 ├── components/
-│   ├── UserList.tsx
-│   ├── UserCard.tsx
-│   └── UserForm.tsx
-├── hooks/
-│   ├── useUsers.ts
-│   └── useUserActions.ts
-├── api/
-│   └── usersApi.ts
-├── stores/
-│   └── usersStore.ts
+│   ├── atomic/
+│   │   ├── UserAvatar.tsx        # Simple avatar display
+│   │   ├── UserBadge.tsx         # User status/role badge
+│   │   └── UserName.tsx          # Formatted user name
+│   ├── composite/
+│   │   ├── UserCard.tsx          # Combines atomic components
+│   │   ├── UserDetails.tsx       # User information panel
+│   │   └── UserActions.tsx       # User-related actions
+│   └── containers/
+│       └── UserList.tsx          # Manages list of UserCards
+├── screens/
+│   ├── UserProfileScreen.tsx     # Full user profile view
+│   └── UserSettingsScreen.tsx    # User settings management
+├── environment.ts                 # Feature-level environment values
 ├── types/
-│   └── index.ts
+│   └── index.ts                  # User-related type definitions
 └── tests/
-    ├── UserList.test.tsx
-    └── useUsers.test.ts
-```
+    ├── components/
+    │   ├── atomic/
+    │   │   └── UserAvatar.test.tsx
+    │   └── composite/
+    │       └── UserCard.test.tsx
+    └── screens/
+        └── UserProfileScreen.test.tsx
 
-## Migration Strategy
+// Example Atomic Component
+/**
+ * @component UserAvatar
+ * @description Simple user avatar display component
+ */
+interface UserAvatarProps {
+  imageUrl: string
+  size?: 'sm' | 'md' | 'lg'
+  alt: string
+}
 
-1. Create new feature directory structure
-2. Identify clear feature boundaries
-3. Move related code to feature directories
-4. Update imports and dependencies
-5. Refactor cross-feature dependencies
-6. Update tests
-7. Validate feature isolation
+export const UserAvatar: React.FC<UserAvatarProps> = ({
+  imageUrl,
+  size = 'md',
+  alt
+}) => {
+  // == Computed ==
+  const dimensions = useMemo(() => ({
+    sm: 24,
+    md: 32,
+    lg: 48
+  }[size]), [size])
 
-## Detailed Implementation Plan
+  // == View ==
+  return (
+    <img
+      src={imageUrl}
+      width={dimensions}
+      height={dimensions}
+      alt={alt}
+      className={`avatar-${size}`}
+    />
+  )
+}
 
-### Phase 1: Initial Setup (Folder Structure)
+// Example Composite Component
+/**
+ * @component UserCard
+ * @description User card combining avatar and basic info
+ */
+interface UserCardProps {
+  userId: string
+}
 
-1. Create new directory structure:
-```bash
-mkdir -p src/features/shared
-mkdir -p src/core/{api,router,styles,providers}
-mkdir -p src/types
-```
+export const UserCard: React.FC<UserCardProps> = ({ userId }) => {
+  // == Environment ==
+  const { currentUser } = useContext(UserEnvironment.CurrentUser)
 
-2. Create feature directories for existing features:
-```bash
-mkdir -p src/features/feature-flags/{components,hooks,api,stores,types,utils,tests}
-mkdir -p src/features/environments/{components,hooks,api,stores,types,utils,tests}
-```
+  // == State ==
+  const [isExpanded, setIsExpanded] = useState(false)
 
-### Phase 2: Code Migration
+  // == Handlers ==
+  const handleToggleExpand = () => setIsExpanded(prev => !prev)
 
-1. Move and reorganize feature flag related files:
-   - Move `src/api/featureFlags.ts` → `src/features/feature-flags/api/featureFlags.ts`
-   - Move `src/components/feature-flags/*` → `src/features/feature-flags/components/*`
-   - Create `src/features/feature-flags/types/index.ts` for FeatureFlag interfaces
-   - Create `src/features/feature-flags/hooks/useFeatureFlags.ts` for shared logic
+  // == View ==
+  return (
+    <div className="user-card">
+      <UserAvatar
+        imageUrl={user.avatarUrl}
+        alt={`${user.name}'s avatar`}
+      />
+      <UserName name={user.name} />
+      <UserBadge role={user.role} />
+      {isExpanded && <UserDetails userId={userId} />}
+    </div>
+  )
+}
 
-2. Move environment related files:
-   - Move environment components to `src/features/environments/components/`
-   - Create `src/features/environments/types/index.ts` for Environment types
-   - Create `src/features/environments/hooks/useEnvironment.ts`
+// Example Screen Component
+/**
+ * @component UserProfileScreen
+ * @description Main user profile screen
+ * @environment CurrentUser, UserPreferences
+ */
+export const UserProfileScreen: React.FC = () => {
+  // == Environment ==
+  const { currentUser } = useContext(UserEnvironment.CurrentUser)
+  const { preferences } = useContext(UserEnvironment.UserPreferences)
 
-3. Move core files:
-   - Move `src/api/config.ts` → `src/core/api/config.ts`
-   - Move route configuration → `src/core/router/`
-   - Move global styles → `src/core/styles/`
+  // == State ==
+  const [activeTab, setActiveTab] = useState('info')
 
-### Phase 3: File Updates
+  // == Computed ==
+  const isOwnProfile = useMemo(() => (
+    currentUser?.id === params.userId
+  ), [currentUser, params.userId])
 
-1. Update imports in route files:
-```typescript
-// src/routes/feature-flags/$id.tsx
-import { FeatureFlag, UpdateFeatureFlag } from '@features/feature-flags/types';
-import { useFeatureFlags } from '@features/feature-flags/hooks/useFeatureFlags';
-import { FeatureFlagForm } from '@features/feature-flags/components/FeatureFlagForm';
-```
-
-2. Create feature-specific stores:
-```typescript
-// src/features/feature-flags/stores/featureFlagStore.ts
-import { create } from 'zustand';
-import { FeatureFlag } from '../types';
-
-export const useFeatureFlagStore = create((set) => ({
-  flags: [] as FeatureFlag[],
-  setFlags: (flags: FeatureFlag[]) => set({ flags }),
-}));
-```
-
-3. Update API configuration:
-```typescript
-// src/core/api/config.ts
-export const API_CONFIG = {
-  baseUrl: process.env.API_BASE_URL || 'http://localhost:8000',
-  timeout: 5000,
-};
-```
-
-### Phase 4: New Files Creation
-
-1. Create feature barrel files:
-```typescript
-// src/features/feature-flags/index.ts
-export * from './components';
-export * from './hooks';
-export * from './api/featureFlags';
-export * from './types';
-```
-
-2. Create shared utilities:
-```typescript
-// src/features/shared/utils/error-handling.ts
-export const handleApiError = (error: unknown) => {
-  // Error handling implementation
-};
-```
-
-3. Create core providers:
-```typescript
-// src/core/providers/ApiProvider.tsx
-// Implementation of API context provider
-```
-
-### Phase 5: Configuration Updates
-
-1. Update TypeScript configuration:
-```json
-{
-  "compilerOptions": {
-    "baseUrl": "src",
-    "paths": {
-      "@features/*": ["features/*"],
-      "@core/*": ["core/*"],
-      "@shared/*": ["features/shared/*"],
-      "@types/*": ["types/*"]
-    }
-  }
+  // == View ==
+  return (
+    <div className="profile-screen">
+      <UserCard userId={params.userId} />
+      <UserDetails userId={params.userId} />
+      {isOwnProfile && <UserActions />}
+    </div>
+  )
 }
 ```
-
-2. Update build configuration:
-```typescript
-// vite.config.ts
-export default defineConfig({
-  resolve: {
-    alias: {
-      '@features': '/src/features',
-      '@core': '/src/core',
-      '@shared': '/src/features/shared',
-      '@types': '/src/types'
-    }
-  }
-});
-```
-
-### Phase 6: Cleanup
-
-1. Files to remove:
-   - `src/api/` directory (after migration)
-   - Old component directories
-   - Unused utility files
-   - Deprecated configuration files
-
-2. Update git tracking:
-```bash
-git rm -r src/api/
-git rm -r src/components/
-```
-
-### Phase 7: Validation
-
-1. Testing checklist:
-   - All features work as expected
-   - No broken imports
-   - All tests pass
-   - Build succeeds
-   - Development server runs
-
-2. Documentation updates:
-   - Update README.md with new structure
-   - Update contribution guidelines
-   - Document migration changes
 
 ## AI Collaboration Tips
 
@@ -345,5 +408,3 @@ git rm -r src/components/
    - Maintain consistent patterns
    - Use clear naming conventions
    - Document expected behavior
-
-This structure enables clear separation of concerns while maintaining feature cohesion and making the codebase more maintainable and AI-friendly.
