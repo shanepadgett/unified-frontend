@@ -30,20 +30,19 @@ This document defines a unified feature architecture pattern for React (Web), Sw
 ```
 src/
 ├── features/
-│   ├── [FeatureName]/
-│   │   ├── components/     # Feature-specific UI components
-│   │   ├── screens/        # Main feature screens/views
-│   │   ├── models/         # Data models and state
-│   │   ├── services/       # Feature-specific services
-│   │   ├── utils/          # Feature-specific utilities
-│   │   ├── tests/          # Feature tests
-│   │   └── README.md       # Feature documentation
-│   └── shared/
-│       ├── ui/             # Shared UI components
-│       └── utils/          # Shared utilities
+│   └── [FeatureName]/
+│       ├── components/     # Feature-specific UI components
+│       ├── screens/        # Main feature screens/views
+│       ├── models/         # Data models and state
+│       ├── services/       # Feature-specific services
+│       ├── utils/          # Feature-specific utilities
+│       ├── tests/          # Feature tests
+│       └── README.md       # Feature documentation
 └── core/
-    ├── services/           # Global services (analytics, networking)
-    └── config/             # App configuration
+    ├── ui/                # Shared UI components
+    ├── utils/             # Shared utilities
+    ├── services/          # Global services (analytics, networking)
+    └── config/            # App configuration
 ```
 
 ### Platform-Specific Additions

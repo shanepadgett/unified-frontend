@@ -14,13 +14,20 @@ npx create-remix@latest web-new
 web-new/
 ├── app/
 │   ├── features/
-│   │   └── shared/
-│   │       ├── ui/
-│   │       └── utils/
+│   │   └── [FeatureName]/
+│   │       ├── components/
+│   │       ├── screens/
+│   │       ├── models/
+│   │       ├── services/
+│   │       ├── utils/
+│   │       ├── tests/
+│   │       └── README.md
 │   ├── core/
-│   │   ├── services/
-│   │   ├── config/
-│   │   └── styles/
+│   │   ├── ui/           # Shared UI components
+│   │   ├── utils/        # Shared utilities
+│   │   ├── services/     # Global services
+│   │   ├── config/       # App configuration
+│   │   └── styles/       # Global styles
 │   ├── routes/
 │   └── root.tsx
 ├── public/
@@ -40,12 +47,21 @@ web-new/
 
 ```
 app/core/
-├── environment/            # Global environment values
-│   └── config.server.ts    # Environment configuration
-├── services/              # Only global services like analytics
-│   └── api-client.ts      # Base API client utilities
+├── ui/                   # Shared UI components
+│   ├── Button/
+│   ├── Input/
+│   ├── Card/
+│   └── Layout/
+├── utils/               # Shared utilities
+│   ├── hooks/
+│   ├── validation/
+│   └── formatting/
+├── services/           # Global services
+│   └── api-client.ts   # Base API client utilities
+├── config/            
+│   └── environment.ts  # Environment configuration
 └── errors/
-    └── base-error.ts      # Base error handling
+    └── base-error.ts   # Base error handling
 ```
 
 2. Configure global utilities:
@@ -67,12 +83,12 @@ app/types/
 └── api.ts                 # Base API types
 ```
 
-## Phase 3: Shared Components (Validation Point 3)
+## Phase 3: Core UI Components (Validation Point 3)
 
-1. Create base UI components:
+1. Create base UI components in core:
 
 ```
-app/features/shared/ui/
+app/core/ui/
 ├── Button/
 ├── Input/
 ├── Card/
@@ -81,10 +97,10 @@ app/features/shared/ui/
 └── Navigation/
 ```
 
-2. Implement shared utilities:
+2. Implement core utilities:
 
 ```
-app/features/shared/utils/
+app/core/utils/
 ├── hooks/
 ├── validation/
 └── formatting/
