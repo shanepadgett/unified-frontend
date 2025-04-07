@@ -121,8 +121,6 @@ app/features/environments/
 │   └── EnvironmentDashboard/
 ├── services/
 │   └── environments.ts
-├── models/
-│   └── environment.ts
 ├── types/
 │   └── index.ts
 ├── utils/
@@ -178,8 +176,6 @@ app/features/featureFlags/
 │   └── FlagDashboard/
 ├── services/
 │   └── feature-flags.ts
-├── models/
-│   └── feature-flag.ts
 ├── types/
 │   └── index.ts
 ├── utils/
