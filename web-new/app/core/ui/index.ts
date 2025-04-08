@@ -5,6 +5,9 @@ export * from './Button/types';
 export { default as Input } from './Input';
 export * from './Input/types';
 
+export { default as TextArea } from './TextArea';
+export * from './TextArea/types';
+
 export { Card, CardHeader, CardBody, CardFooter } from './Card';
 export * from './Card/types';
 

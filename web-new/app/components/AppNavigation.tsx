@@ -35,6 +35,18 @@ export function AppNavigation() {
         >
           Environments
         </NavLink>
+        <NavLink
+          to="/feature-flags"
+          className={({ isActive }) =>
+            `px-3 py-2 rounded-md text-sm font-medium ${
+              isActive
+                ? "bg-primary-600/10 text-primary-600 dark:bg-primary-600/20"
+                : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+            }`
+          }
+        >
+          Feature Flags
+        </NavLink>
       </div>
     </NavBar>
   );

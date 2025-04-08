@@ -1,12 +1,12 @@
 /**
  * Server-side API client utilities
- * 
+ *
  * This file contains utilities for making API requests from the server.
  * It should not be imported directly in client-side code.
  */
 
 import { getEnvironmentConfig } from '../environment/config.server';
-import { 
+import {
   apiGet as clientApiGet,
   apiPost as clientApiPost,
   apiPut as clientApiPut,
@@ -24,9 +24,9 @@ export function createServerApiUrl(path: string): string {
   const baseUrl = config.apiUrl.endsWith('/')
     ? config.apiUrl.slice(0, -1)
     : config.apiUrl;
-  
+
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  
+
   return `${baseUrl}${normalizedPath}`;
 }
 
@@ -77,6 +77,25 @@ export async function apiPut<T>(
   return fetchWithTimeout<T>(url, {
     ...options,
     method: 'PUT',
+    headers,
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * Make a PATCH request to the API from the server
+ */
+export async function apiPatch<T>(
+  path: string,
+  data: any,
+  options: RequestOptions = {}
+): Promise<T> {
+  const url = createServerApiUrl(path);
+  const headers = createHeaders(options.headers);
+
+  return fetchWithTimeout<T>(url, {
+    ...options,
+    method: 'PATCH',
     headers,
     body: JSON.stringify(data),
   });

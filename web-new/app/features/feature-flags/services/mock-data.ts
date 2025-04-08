@@ -1,0 +1,55 @@
+import { FeatureFlag } from "../types";
+
+// Mock feature flag data for development
+export const mockFeatureFlags: FeatureFlag[] = [
+  {
+    id: "1",
+    name: "Dark Mode",
+    description: "Enable dark mode across the application",
+    enabled: true,
+    environment: "development",
+    lastModified: new Date("2023-01-01T00:00:00Z"),
+    owner: "UI Team",
+    rolloutPercentage: 100,
+  },
+  {
+    id: "2",
+    name: "New Dashboard",
+    description: "Enable the new dashboard experience",
+    enabled: false,
+    environment: "development",
+    lastModified: new Date("2023-01-01T00:00:00Z"),
+    owner: "Product Team",
+    rolloutPercentage: 0,
+  },
+  {
+    id: "3",
+    name: "Analytics",
+    description: "Enable analytics tracking",
+    enabled: true,
+    environment: "development",
+    lastModified: new Date("2023-01-01T00:00:00Z"),
+    owner: "Data Team",
+    rolloutPercentage: 100,
+  },
+  {
+    id: "4",
+    name: "Beta Features",
+    description: "Enable beta features for testing",
+    enabled: false,
+    environment: "staging",
+    lastModified: new Date("2023-01-01T00:00:00Z"),
+    owner: "Product Team",
+    rolloutPercentage: 50,
+  },
+  {
+    id: "5",
+    name: "Performance Monitoring",
+    description: "Enable performance monitoring",
+    enabled: true,
+    environment: "production",
+    lastModified: new Date("2023-01-01T00:00:00Z"),
+    owner: "DevOps Team",
+    rolloutPercentage: 100,
+  },
+];

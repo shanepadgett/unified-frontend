@@ -187,6 +187,25 @@ export async function apiPut<T>(
 }
 
 /**
+ * Make a PATCH request to the API
+ */
+export async function apiPatch<T>(
+  path: string,
+  data: any,
+  options: RequestOptions = {}
+): Promise<T> {
+  const url = createApiUrl(path);
+  const headers = createHeaders(options.headers);
+
+  return fetchWithTimeout<T>(url, {
+    ...options,
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify(data),
+  });
+}
+
+/**
  * Make a DELETE request to the API
  */
 export async function apiDelete<T>(path: string, options: RequestOptions = {}): Promise<T> {
