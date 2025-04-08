@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { getEnvironments } from "~/features/environments/services/environments";
-import { Environment } from "~/features/environments/types";
+import { getEnvironments, Environment } from "~/features/environments";
 import { NativeSelect, SelectOption } from "~/core/ui";
 
 export interface EnvironmentSelectorProps {

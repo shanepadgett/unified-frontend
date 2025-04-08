@@ -1,6 +1,6 @@
 import { json, redirect } from "@remix-run/node";
 import { getFeatureFlag } from "~/features/feature-flags/services/feature-flags.server";
-import { FeatureFlag } from "~/features/feature-flags/types";
+import { FeatureFlag } from "~/features/feature-flags";
 
 export interface LoaderData {
   featureFlag: FeatureFlag;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button, Input, TextArea, Toggle } from "~/core/ui";
 import { FeatureFlag, CreateFeatureFlag, UpdateFeatureFlag } from "../../types";
-import { getEnvironments } from "~/features/environments/services/environments";
+import { getEnvironments } from "~/features/environments";
 
 interface FeatureFlagFormProps {
   flag?: FeatureFlag;

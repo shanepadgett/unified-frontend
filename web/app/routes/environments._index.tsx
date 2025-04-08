@@ -4,10 +4,10 @@ import { Card, CardBody, Button, Container } from "~/core/ui";
 import {
   EnvironmentCard,
   CreateEnvironmentForm,
-  SearchInput
-} from "~/features/environments/components";
-import { getEnvironments as getEnvironmentsClient } from "~/features/environments/services/environments";
-import { Environment } from "~/features/environments/types";
+  SearchInput,
+  getEnvironments as getEnvironmentsClient,
+  Environment
+} from "~/features/environments";
 import { LoaderData, loader } from "../routes/environments-loader.server";
 
 export { loader };

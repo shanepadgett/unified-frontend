@@ -1,6 +1,6 @@
 import { json } from "@remix-run/node";
 import { getEnvironments } from "~/features/environments/services/environments.server";
-import { Environment } from "~/features/environments/types";
+import { Environment } from "~/features/environments";
 
 export interface LoaderData {
   environments: Environment[];

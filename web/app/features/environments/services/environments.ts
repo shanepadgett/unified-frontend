@@ -4,7 +4,7 @@
  * This file contains services for interacting with the environments API.
  */
 
-import { apiGet, apiPost, apiPut, apiDelete } from "~/core/services/api-client";
+import { apiGet, apiPost, apiPatch, apiDelete } from "~/core/services/api-client";
 import { Environment, CreateEnvironment, UpdateEnvironment } from "../types";
 import { mockEnvironments } from "./mock-data";
 
@@ -131,7 +131,7 @@ export async function updateEnvironment(id: string, data: UpdateEnvironment): Pr
 
     return Promise.resolve({...updatedEnvironment});
   }
-  return apiPut<Environment>(`/environments/${id}`, data);
+  return apiPatch<Environment>(`/environments/${id}`, data);
 }
 
 /**
