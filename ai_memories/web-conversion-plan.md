@@ -1,87 +1,74 @@
 # Web Application Conversion Plan (Remix)
 
-## Phase 1: Project Setup (Validation Point 1)
+## Phase 1: Project Analysis & Inventory
 
-1. Initialize new Remix project:
-
-```bash
-npx create-remix@latest web-new
+1. Core Components from @web/src/features/shared:
+```typescript
+// Components to migrate
+Button
+Card
+TextField
+Layout components
+Navigation components
+// Utilities to migrate
+API client configuration
+Environment utilities
+Type definitions
 ```
 
-2. Configure project structure:
-
-```
-web-new/
-├── app/
-│   ├── features/
-│   │   └── [FeatureName]/
-│   │       ├── components/
-│   │       ├── screens/
-│   │       ├── models/
-│   │       ├── services/
-│   │       ├── utils/
-│   │       ├── tests/
-│   │       └── README.md
-│   ├── core/
-│   │   ├── ui/           # Shared UI components
-│   │   ├── utils/        # Shared utilities
-│   │   ├── services/     # Global services
-│   │   ├── config/       # App configuration
-│   │   └── styles/       # Global styles
-│   ├── routes/
-│   └── root.tsx
-├── public/
-└── tests/
+2. Feature-specific Components from @web/src/features:
+```typescript
+// Environment Feature
+EnvironmentSelector
+EnvironmentCard
+EnvironmentDashboard
+// Feature Flags
+FeatureFlagCard
+FlagList
+FlagDashboard
 ```
 
-3. Set up development environment:
-- Configure TypeScript with strict mode
-- Set up TailwindCSS
-- Configure path aliases
-- Add ESLint and Prettier
-- Set up testing environment (Vitest + Testing Library)
+3. State Management & Services:
+```typescript
+// Current Implementation
+- React Query for server state
+- Feature-specific stores
+- API integration layers
+```
 
-## Phase 2: Core Infrastructure (Validation Point 2)
+## Phase 2: Core Setup & Infrastructure
 
-1. Set up core infrastructure:
+1. Initialize project structure (as before)
 
+2. Migrate core utilities (one at a time):
 ```
 app/core/
-├── ui/                   # Shared UI components
-│   ├── Button/
-│   ├── Input/
-│   ├── Card/
-│   └── Layout/
-├── utils/               # Shared utilities
-│   ├── hooks/
-│   ├── validation/
-│   └── formatting/
-├── services/           # Global services
-│   └── api-client.ts   # Base API client utilities
-├── config/            
-│   └── environment.ts  # Environment configuration
-└── errors/
-    └── base-error.ts   # Base error handling
+├── ui/                   # Migrate shared components in order:
+│   ├── Button/          # 1. Button (most basic)
+│   │   ├── index.tsx
+│   │   └── Button.test.tsx
+│   ├── Card/            # 2. Card (used by many components)
+│   │   ├── index.tsx
+│   │   └── Card.test.tsx
+│   ├── Input/           # 3. Form inputs
+│   │   ├── index.tsx
+│   │   └── Input.test.tsx
+│   └── Layout/          # 4. Layout components
+│       ├── index.tsx
+│       └── Layout.test.tsx
+├── utils/               
+│   ├── api-client.ts    # 5. API client (needed for features)
+│   ├── environment.ts   # 6. Environment configuration
+│   └── validation.ts    # 7. Shared validation
+└── types/
+    └── common.ts        # 8. Shared type definitions
 ```
 
-2. Configure global utilities:
-- Environment configuration
-- Base API client utilities (headers, fetch wrapper)
-- Error handling middleware
-- Type definitions for global concepts
-
-3. Implement base layouts and error handling:
-- Root layout with error boundary
-- Loading states
-- Error display components
-- Global error handling
-
-4. Create global types:
-
-```
-app/types/
-└── api.ts                 # Base API types
-```
+3. Validation Points:
+- Each component works in isolation (unit tests)
+- Components render correctly with different props
+- Error states handled properly
+- TypeScript compatibility
 
 ## Phase 3: Core UI Components (Validation Point 3)
 
@@ -108,119 +95,90 @@ app/core/utils/
 
 3. Create component documentation and tests
 
-## Phase 4: Environment Feature (Validation Point 4)
+## Phase 4: Environment Feature (Incremental)
 
-1. Implement feature structure:
-
-```
-app/features/environments/
-├── components/
-│   ├── EnvironmentSelector/
-│   └── EnvironmentCard/
-├── screens/
-│   └── EnvironmentDashboard/
-├── services/
-│   └── environments.ts
-├── types/
-│   └── index.ts
-├── utils/
-├── tests/
-└── README.md
-```
-
-2. Environment Feature Documentation:
-
-```markdown
-# Environments Feature
-
-## Purpose
-Manages application environments (development, staging, production)
-
-## Components
-- EnvironmentSelector: Dropdown for environment selection
-- EnvironmentCard: Display environment details
-
-## Dependencies
-- Shared UI components
-
-## Interface
-
-interface EnvironmentFeature {
-  // Public types
-  Environment: {
-    name: string;
-    isDefault: boolean;
-  };
-  
-  // Public methods
-  getEnvironments(): Promise<Environment[]>;
-  getCurrentEnvironment(): Environment;
+1. Step 1 - Basic Types & API:
+```typescript
+// app/features/environments/types/index.ts
+export interface Environment {
+  id: string;
+  name: string;
+  isDefault: boolean;
 }
 
-## AI Markers
-@feature-boundary
-@components: [EnvironmentSelector, EnvironmentCard]
-@dependencies: [SharedDropdown, SharedCard]
+// app/features/environments/services/environments.ts
+export const getEnvironments = async () => {...}
 ```
 
-## Phase 5: Feature Flag Feature (Validation Point 5)
-
-1. Implement feature structure:
-
+2. Step 2 - Core Components:
 ```
-app/features/featureFlags/
-├── components/
-│   ├── FeatureFlagCard/
-│   └── FlagList/
-├── screens/
-│   └── FlagDashboard/
-├── services/
-│   └── feature-flags.ts
-├── types/
-│   └── index.ts
-├── utils/
-├── tests/
-└── README.md
+app/features/environments/components/
+├── EnvironmentCard/
+│   ├── index.tsx
+│   └── EnvironmentCard.test.tsx
+└── EnvironmentSelector/
+    ├── index.tsx
+    └── EnvironmentSelector.test.tsx
 ```
 
-2. Feature Flag Documentation:
+3. Step 3 - Screen Implementation:
+```
+app/features/environments/screens/
+└── EnvironmentDashboard/
+    ├── index.tsx
+    └── EnvironmentDashboard.test.tsx
+```
 
-```markdown
-# Feature Flags Feature
+4. Validation Points:
+- Components render correctly
+- API integration works
+- State management functions
+- Navigation works
+- Tests pass
 
-## Purpose
-Manages feature flags across different environments
+## Phase 5: Feature Flags (Incremental)
 
-## Components
-- FeatureFlagCard: Display and edit feature flag
-- FlagList: List of feature flags
+1. Step 1 - Dependencies Check:
+- Verify Environment feature works
+- Test environment selection
+- Confirm API client setup
 
-## Dependencies
-- Environments Feature (@features/environments)
-- Shared UI components
-
-## Interface
-
-interface FeatureFlagFeature {
-  // Public types
-  FeatureFlag: {
-    id: string;
-    name: string;
-    environment: string; // References Environment type
-    enabled: boolean;
-    // ... other properties
-  };
-  
-  // Public methods
-  getFeatureFlags(environment: string): Promise<FeatureFlag[]>;
-  updateFeatureFlag(flag: FeatureFlag): Promise<FeatureFlag>;
+2. Step 2 - Basic Implementation:
+```typescript
+// Start with minimal feature flag type
+interface FeatureFlag {
+  id: string;
+  name: string;
+  enabled: boolean;
+  environmentId: string;
 }
 
-## AI Markers
-@feature-boundary
-@components: [FeatureFlagCard, FlagList]
-@dependencies: [@features/environments/EnvironmentSelector, SharedCard]
+// Implement basic service
+const getFeatureFlags = async (environmentId: string) => {...}
 ```
+
+3. Step 3 - UI Components (in order):
+```
+app/features/featureFlags/components/
+├── FlagList/           # List view first
+├── FeatureFlagCard/    # Then detail view
+└── FlagToggle/         # Then interactions
+```
+
+4. Step 4 - Screens & Integration:
+```
+app/features/featureFlags/screens/
+├── FlagDashboard/      # Main view
+└── FlagDetail/         # Detail view
+```
+
+5. Validation Points after each step:
+- Component renders
+- Data flow works
+- Interactions function
+- Integration with environments
+- Error handling works
+- Tests pass
 
 ## Phase 6: Route Implementation (Validation Point 6)
 
