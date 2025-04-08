@@ -5,7 +5,7 @@ This document outlines a feature-based architectural approach for iOS applicatio
 
 ## Directory Structure
 ```
-Sources/
+featureFlags/
 ├── Features/
 │   ├── [FeatureName]/
 │   │   ├── Components/     # Feature-specific SwiftUI views
