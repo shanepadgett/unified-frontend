@@ -3,6 +3,14 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --tw-bg-dark-900: #121212;
+    --tw-bg-dark-800: #1E1E1E;
+    --tw-bg-dark-700: #2D2D2D;
+    --tw-bg-dark-600: #3D3D3D;
+    --tw-primary-600: #5E5CE6;
+  }
+
   html {
     color-scheme: light dark;
   }
@@ -18,5 +26,10 @@
 
   .using-mouse * {
     outline: none !important;
+  }
+
+  .dark {
+    background-color: var(--tw-bg-dark-900);
+    color: #f3f4f6;
   }
 }

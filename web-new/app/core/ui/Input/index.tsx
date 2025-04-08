@@ -21,35 +21,35 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     // Generate a unique ID if not provided
     const inputId = id || `input-${Math.random().toString(36).substring(2, 9)}`;
-    
+
     // Base styles
     const baseStyles = "rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-primary-600";
-    
+
     // Size styles
     const sizeStyles = {
       sm: "px-3 py-1.5 text-sm",
-      md: "px-4 py-2 text-base",
-      lg: "px-4 py-3 text-lg",
+      md: "px-4 py-2 text-sm",
+      lg: "px-4 py-3 text-base",
     };
-    
+
     // Variant styles
     const variantStyles = {
-      outline: "border border-gray-300 bg-white dark:border-dark-600 dark:bg-dark-800 dark:text-white",
+      outline: "border border-gray-300 bg-white dark:border-dark-600 dark:bg-dark-800 dark:text-gray-100",
       filled: "border border-gray-200 bg-gray-100 dark:border-dark-700 dark:bg-dark-700 dark:text-white",
     };
-    
+
     // Error styles
     const errorStyles = error
       ? "border-red-500 focus:border-red-500 focus:ring-red-500"
       : "";
-    
+
     // Width styles
     const widthStyles = fullWidth ? "w-full" : "";
-    
+
     // Icon padding styles
     const leftIconPadding = leftIcon ? "pl-10" : "";
     const rightIconPadding = rightIcon ? "pr-10" : "";
-    
+
     // Combine all styles
     const inputStyles = twMerge(
       baseStyles,
@@ -61,14 +61,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       rightIconPadding,
       className
     );
-    
+
     // Label size styles
     const labelSizeStyles = {
       sm: "text-xs mb-1",
       md: "text-sm mb-1.5",
       lg: "text-base mb-2",
     };
-    
+
     return (
       <div className={fullWidth ? "w-full" : ""}>
         {label && (
@@ -79,14 +79,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             {label}
           </label>
         )}
-        
+
         <div className="relative">
           {leftIcon && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500 dark:text-gray-400">
               {leftIcon}
             </div>
           )}
-          
+
           <input
             ref={ref}
             id={inputId}
@@ -101,14 +101,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             }
             {...props}
           />
-          
+
           {rightIcon && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500 dark:text-gray-400">
               {rightIcon}
             </div>
           )}
         </div>
-        
+
         {error && (
           <p
             id={`${inputId}-error`}
@@ -117,7 +117,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             {error}
           </p>
         )}
-        
+
         {helperText && !error && (
           <p
             id={`${inputId}-helper-text`}

@@ -33,14 +33,15 @@ export const meta: MetaFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body className="min-h-screen bg-gray-50">
+      <body className="min-h-screen bg-gray-50 dark:bg-dark-900 dark:text-gray-200">
+
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -54,7 +55,7 @@ export default function App() {
   const isLoading = navigation.state === "loading";
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen dark:bg-dark-900">
       <AppNavigation />
       <main className="flex-1">
         {isLoading ? <PageLoading /> : <Outlet />}

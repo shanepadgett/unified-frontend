@@ -15,16 +15,16 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     ref
   ) => {
     // Base styles
-    const baseStyles = "bg-white rounded-lg shadow-sm dark:bg-dark-800";
-    
+    const baseStyles = "bg-white rounded-lg shadow dark:bg-dark-800";
+
     // Border styles
     const borderStyles = bordered ? "border border-gray-200 dark:border-dark-600" : "";
-    
+
     // Hover styles
     const hoverStyles = hoverable
-      ? "transition-shadow hover:shadow-md"
+      ? "transition-shadow hover:shadow-md group"
       : "";
-    
+
     // Padding styles
     const paddingStyles = {
       none: "",
@@ -32,7 +32,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       md: "p-4",
       lg: "p-6",
     };
-    
+
     // Combine all styles
     const cardStyles = twMerge(
       baseStyles,
@@ -41,7 +41,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       paddingStyles[padding],
       className
     );
-    
+
     return (
       <div ref={ref} className={cardStyles} {...props}>
         {children}
@@ -56,7 +56,7 @@ const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
       "px-6 py-4 border-b border-gray-200 dark:border-dark-600",
       className
     );
-    
+
     return (
       <div ref={ref} className={headerStyles} {...props}>
         {children}
@@ -68,7 +68,7 @@ const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
 const CardBody = forwardRef<HTMLDivElement, CardBodyProps>(
   ({ children, className, ...props }, ref) => {
     const bodyStyles = twMerge("p-6", className);
-    
+
     return (
       <div ref={ref} className={bodyStyles} {...props}>
         {children}
@@ -83,7 +83,7 @@ const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
       "px-6 py-4 border-t border-gray-200 dark:border-dark-600",
       className
     );
-    
+
     return (
       <div ref={ref} className={footerStyles} {...props}>
         {children}

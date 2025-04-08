@@ -23,7 +23,7 @@ export function FeatureFlagCard({ flag, onToggle, isLoading = false }: FeatureFl
   };
 
   return (
-    <Card className="relative group border border-gray-200 dark:border-dark-600 p-4">
+    <Card className="relative group border border-gray-200 dark:border-dark-600 p-4 hover:shadow-md transition-shadow">
       <div className="flex flex-col space-y-4">
         <div className="flex justify-between items-center">
           <Link
@@ -44,19 +44,19 @@ export function FeatureFlagCard({ flag, onToggle, isLoading = false }: FeatureFl
           </div>
         </div>
 
-        <p className="text-sm text-gray-600 dark:text-gray-300">{description}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{description}</p>
 
         <div className="flex flex-wrap gap-2">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-badge-dev text-white">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-badge-dev text-white shadow-sm">
             {environment}
           </span>
           {owner && (
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-badge-team text-white">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-badge-team text-white shadow-sm">
               {owner}
             </span>
           )}
           {rolloutPercentage !== undefined && (
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-badge-rollout text-white">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-badge-rollout text-white shadow-sm">
               {rolloutPercentage}% rollout
             </span>
           )}
