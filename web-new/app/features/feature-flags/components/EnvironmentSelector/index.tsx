@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getEnvironments } from "~/features/environments/services/environments";
 import { Environment } from "~/features/environments/types";
+import { NativeSelect, SelectOption } from "~/core/ui";
 
 export interface EnvironmentSelectorProps {
   selectedEnvironment: string;
@@ -52,23 +53,12 @@ export function EnvironmentSelector({ selectedEnvironment, onChange, className }
   }, [selectedEnvironment, onChange]);
 
   return (
-    <div className={className}>
-      <select
-        value={selectedEnvironment}
-        onChange={(e) => onChange(e.target.value)}
-        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-600 focus:ring-primary-600 dark:border-dark-600 dark:bg-dark-800 dark:text-white"
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <option>Loading...</option>
-        ) : (
-          environments.map((env) => (
-            <option key={env.id} value={env.id}>
-              {env.name}
-            </option>
-          ))
-        )}
-      </select>
-    </div>
+    <NativeSelect
+      options={environments}
+      value={selectedEnvironment}
+      onChange={onChange}
+      isLoading={isLoading}
+      className={className}
+    />
   );
 }

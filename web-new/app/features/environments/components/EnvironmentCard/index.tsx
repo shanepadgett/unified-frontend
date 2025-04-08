@@ -97,11 +97,13 @@ export function EnvironmentCard({ environment, onUpdate }: EnvironmentCardProps)
                 Set as default environment
               </label>
             </div>
-            <div className="flex justify-end space-x-2">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 sm:justify-end">
               <Button
                 onClick={handleCancel}
                 variant="outline"
                 size="md"
+                fullWidth={true}
+                className="sm:w-auto"
               >
                 Cancel
               </Button>
@@ -109,6 +111,8 @@ export function EnvironmentCard({ environment, onUpdate }: EnvironmentCardProps)
                 onClick={handleUpdate}
                 variant="primary"
                 size="md"
+                fullWidth={true}
+                className="sm:w-auto"
               >
                 Save
               </Button>
@@ -126,7 +130,7 @@ export function EnvironmentCard({ environment, onUpdate }: EnvironmentCardProps)
                   {environment.name}
                 </h3>
               </div>
-              <div className="flex space-x-2">
+              <div className="sm:flex space-x-2 hidden">
                 <Button
                   onClick={() => setIsEditing(true)}
                   variant="secondary"
@@ -163,6 +167,26 @@ export function EnvironmentCard({ environment, onUpdate }: EnvironmentCardProps)
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 Last Updated: {formattedUpdatedDate}
               </p>
+            </div>
+
+            {/* Mobile buttons - stacked and full width at the bottom */}
+            <div className="sm:hidden flex flex-col space-y-2 mt-4">
+              <Button
+                onClick={() => setIsEditing(true)}
+                variant="secondary"
+                fullWidth
+              >
+                Edit
+              </Button>
+              <Button
+                onClick={handleDelete}
+                disabled={environment.isDefault || isDeleting}
+                variant="danger"
+                fullWidth
+                isLoading={isDeleting}
+              >
+                Delete
+              </Button>
             </div>
           </div>
         )}

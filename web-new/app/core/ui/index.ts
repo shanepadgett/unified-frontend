@@ -21,3 +21,6 @@ export { NavBar, SideNav, NavItem } from './Navigation';
 export * from './Navigation/types';
 
 export { LoadingIndicator, PageLoading } from './LoadingIndicator';
+
+export { Select, NativeSelect } from './Select';
+export * from './Select/types';

@@ -23,15 +23,15 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     // Size styles for the toggle
     const toggleSizeStyles = {
       sm: "w-8 h-4",
-      md: "w-10 h-5",
-      lg: "w-12 h-6",
+      md: "w-11 h-6",
+      lg: "w-14 h-7",
     };
 
     // Size styles for the toggle handle
     const handleSizeStyles = {
-      sm: "w-3 h-3 translate-x-0.5 checked:translate-x-4",
-      md: "w-4 h-4 translate-x-0.5 checked:translate-x-5",
-      lg: "w-5 h-5 translate-x-0.5 checked:translate-x-6",
+      sm: { width: "0.75rem", height: "0.75rem", translateOff: "0.125rem", translateOn: "1rem" },
+      md: { width: "1rem", height: "1rem", translateOff: "0.25rem", translateOn: "1.5rem" },
+      lg: { width: "1.25rem", height: "1.25rem", translateOff: "0.25rem", translateOn: "2.25rem" },
     };
 
     // Label size styles
@@ -68,7 +68,7 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
             <label
               htmlFor={toggleId}
               className={twMerge(
-                "block rounded-full cursor-pointer transition-colors",
+                "relative inline-flex items-center rounded-full cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2",
                 toggleSizeStyles[size],
                 checked
                   ? "bg-primary-600"
@@ -77,10 +77,12 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
               )}
             >
               <span
-                className={twMerge(
-                  "block rounded-full bg-white transform transition-transform shadow",
-                  handleSizeStyles[size]
-                )}
+                className="inline-block rounded-full bg-white transform transition-transform shadow"
+                style={{
+                  width: handleSizeStyles[size].width,
+                  height: handleSizeStyles[size].height,
+                  transform: `translateX(${checked ? handleSizeStyles[size].translateOn : handleSizeStyles[size].translateOff})`
+                }}
               />
             </label>
           </div>

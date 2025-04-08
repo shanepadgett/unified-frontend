@@ -1,8 +1,9 @@
-import { FeatureFlagDashboard } from "~/features/feature-flags/screens";
-import { LoaderData, loader } from "./feature-flags-loader.server";
+import { redirect } from "@remix-run/node";
 
-export { loader };
+export function loader() {
+  return redirect("/");
+}
 
 export default function FeatureFlagsIndexRoute() {
-  return <FeatureFlagDashboard />;
+  return null;
 }

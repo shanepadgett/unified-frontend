@@ -8,11 +8,11 @@ export interface LoaderData {
 
 export async function loader({ params }: { params: { id: string } }) {
   const id = params.id;
-  
+
   if (!id) {
-    return redirect("/feature-flags");
+    return redirect("/");
   }
-  
+
   try {
     const featureFlag = await getFeatureFlag(id);
     return json<LoaderData>({ featureFlag });

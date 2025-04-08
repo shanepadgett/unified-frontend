@@ -31,17 +31,17 @@ export function FeatureFlagForm({
   const [expiresAt, setExpiresAt] = useState<string | undefined>(
     flag?.expiresAt ? new Date(flag.expiresAt).toISOString().split('T')[0] : undefined
   );
-  
+
   // Track form changes
   const [hasFormChanges, setHasFormChanges] = useState(mode === 'create');
-  
+
   // Environment options
   const [environments, setEnvironments] = useState<{ id: string; name: string }[]>([
     { id: 'development', name: 'Development' },
     { id: 'staging', name: 'Staging' },
     { id: 'production', name: 'Production' }
   ]);
-  
+
   // Load environments
   useEffect(() => {
     const fetchEnvironments = async () => {
@@ -58,10 +58,10 @@ export function FeatureFlagForm({
         console.error('Failed to fetch environments:', error);
       }
     };
-    
+
     fetchEnvironments();
   }, []);
-  
+
   // Store initial values for comparison
   const initialValues = {
     name: flag?.name || '',
@@ -73,7 +73,7 @@ export function FeatureFlagForm({
     dependencies: flag?.dependencies || [],
     expiresAt: flag?.expiresAt ? new Date(flag.expiresAt).toISOString().split('T')[0] : undefined
   };
-  
+
   // Check for form changes in edit mode
   useEffect(() => {
     const hasChanges =
@@ -85,10 +85,10 @@ export function FeatureFlagForm({
       rolloutPercentage !== initialValues.rolloutPercentage ||
       JSON.stringify(dependencies) !== JSON.stringify(initialValues.dependencies) ||
       expiresAt !== initialValues.expiresAt;
-    
+
     // Update local state for button disabled prop
     setHasFormChanges(mode === 'create' || hasChanges);
-    
+
     // Call the callback if provided
     if (onFormChange) {
       onFormChange(hasChanges);
@@ -97,20 +97,20 @@ export function FeatureFlagForm({
     mode, onFormChange, name, description, enabled, environment, owner,
     rolloutPercentage, dependencies, expiresAt, initialValues
   ]);
-  
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!name.trim()) {
       return;
     }
-    
+
     if (!description.trim()) {
       return;
     }
-    
+
     // Create a properly structured form data object with all required fields
     const formData: CreateFeatureFlag | UpdateFeatureFlag = mode === 'create'
       ? {
@@ -133,24 +133,24 @@ export function FeatureFlagForm({
           ...(dependencies.length > 0 && { dependencies }),
           ...(expiresAt && { expiresAt })
         };
-    
+
     await onSubmit(formData);
   };
-  
+
   // Handle dependencies input
   const handleDependenciesChange = (value: string) => {
     const deps = value.split(',').map(dep => dep.trim()).filter(Boolean);
     setDependencies(deps);
   };
-  
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form id="feature-flag-form" onSubmit={handleSubmit} className="space-y-6">
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4 mb-4">
           <p className="text-red-700 dark:text-red-400">{error}</p>
         </div>
       )}
-      
+
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <Input
           label="Name"
@@ -159,7 +159,7 @@ export function FeatureFlagForm({
           placeholder="Feature name"
           required
         />
-        
+
         <div className="sm:col-span-2">
           <TextArea
             label="Description"
@@ -170,7 +170,7 @@ export function FeatureFlagForm({
             required
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
             Environment
@@ -187,14 +187,14 @@ export function FeatureFlagForm({
             ))}
           </select>
         </div>
-        
+
         <Input
           label="Owner"
           value={owner}
           onChange={(e) => setOwner(e.target.value)}
           placeholder="Team or person responsible"
         />
-        
+
         <Input
           label="Rollout Percentage"
           type="number"
@@ -204,7 +204,7 @@ export function FeatureFlagForm({
           onChange={(e) => setRolloutPercentage(e.target.value ? parseInt(e.target.value, 10) : undefined)}
           placeholder="Percentage of users (0-100)"
         />
-        
+
         <Input
           label="Dependencies"
           value={dependencies.join(', ')}
@@ -212,7 +212,7 @@ export function FeatureFlagForm({
           placeholder="Comma-separated list of dependencies"
           helperText="Separate multiple dependencies with commas"
         />
-        
+
         <Input
           label="Expires At"
           type="date"
@@ -220,7 +220,7 @@ export function FeatureFlagForm({
           onChange={(e) => setExpiresAt(e.target.value || undefined)}
           helperText="Optional expiration date"
         />
-        
+
         <div className="flex items-center">
           <Toggle
             label="Enabled"
@@ -229,16 +229,21 @@ export function FeatureFlagForm({
           />
         </div>
       </div>
-      
-      <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-dark-600">
-        <Button
-          type="submit"
-          variant="primary"
-          disabled={isSubmitting || (mode === 'edit' && !hasFormChanges)}
-          isLoading={isSubmitting}
-        >
-          {mode === 'create' ? 'Create Feature Flag' : 'Update Feature Flag'}
-        </Button>
+
+      {/* Show submit button in all views for create mode, or only in mobile view for edit mode */}
+      <div className={`${mode === 'edit' ? 'sm:hidden' : ''}`}>
+        <div className="sm:flex sm:justify-end pt-4 border-t border-gray-200 dark:border-dark-600">
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isSubmitting || (mode === 'edit' && !hasFormChanges)}
+            isLoading={isSubmitting}
+            fullWidth={true}
+            className={`${mode === 'edit' ? 'sm:hidden' : 'sm:w-auto'}`}
+          >
+            {mode === 'create' ? 'Create Feature Flag' : 'Update Feature Flag'}
+          </Button>
+        </div>
       </div>
     </form>
   );

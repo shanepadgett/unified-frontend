@@ -9,30 +9,30 @@ export function FeatureFlagCreate() {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Handle form submission
   const handleSubmit = async (data: CreateFeatureFlag) => {
     setError(null);
     setIsSubmitting(true);
-    
+
     try {
       await createFeatureFlag(data);
-      navigate("/feature-flags");
+      navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create feature flag");
     } finally {
       setIsSubmitting(false);
     }
   };
-  
+
   return (
     <Container>
       <div className="py-8">
         <div className="flex justify-between items-center mb-6">
           <button
             type="button"
-            onClick={() => navigate("/feature-flags")}
-            className="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700"
+            onClick={() => navigate("/")}
+            className="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700 w-full sm:w-auto"
           >
             <svg
               className="mr-1 h-5 w-5"
@@ -47,14 +47,14 @@ export function FeatureFlagCreate() {
                 clipRule="evenodd"
               />
             </svg>
-            Back to Feature Flags
+            <span className="sm:inline">Back to Feature Flags</span>
           </button>
         </div>
-        
+
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Create Feature Flag
         </h1>
-        
+
         <FeatureFlagForm
           mode="create"
           onSubmit={handleSubmit}

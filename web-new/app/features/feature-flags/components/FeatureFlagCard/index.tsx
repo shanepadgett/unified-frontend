@@ -27,7 +27,7 @@ export function FeatureFlagCard({ flag, onToggle, isLoading = false }: FeatureFl
       <div className="flex flex-col space-y-4">
         <div className="flex justify-between items-center">
           <Link
-            to={`/feature-flags/${id}`}
+            to={`/${id}`}
             className="cursor-pointer"
             aria-label={`Edit ${name} feature flag`}
           >
@@ -40,6 +40,7 @@ export function FeatureFlagCard({ flag, onToggle, isLoading = false }: FeatureFl
               checked={enabled}
               onChange={handleToggle}
               disabled={isLoading}
+              size="md"
             />
           </div>
         </div>

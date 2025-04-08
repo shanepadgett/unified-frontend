@@ -85,13 +85,13 @@ export function FeatureFlagDashboard() {
           <EnvironmentSelector
             selectedEnvironment={selectedEnvironment}
             onChange={handleEnvironmentChange}
-            className="w-full"
+            className="w-full h-[38px]"
           />
 
           <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search feature flags..." />
 
           <Link
-            to="/feature-flags/create"
+            to="/create"
             className="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-200 dark:border-dark-600 text-sm font-medium rounded-md bg-white dark:bg-dark-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-dark-700"
           >
             Create Flag
@@ -111,9 +111,9 @@ export function FeatureFlagDashboard() {
               <EnvironmentSelector
                 selectedEnvironment={selectedEnvironment}
                 onChange={handleEnvironmentChange}
-                className="w-[180px]"
+                className="w-[180px] h-[38px]"
               />
-              <Link to="/feature-flags/create">
+              <Link to="/create">
                 <Button variant="primary">Create Flag</Button>
               </Link>
             </div>

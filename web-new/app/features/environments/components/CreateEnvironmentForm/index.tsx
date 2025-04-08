@@ -101,12 +101,14 @@ export function CreateEnvironmentForm({ onSuccess }: CreateEnvironmentFormProps)
             </label>
           </div>
 
-          <div className="flex justify-end">
+          <div className="sm:flex sm:justify-end">
             <Button
               type="submit"
               variant="primary"
               isLoading={isSubmitting}
               disabled={isSubmitting}
+              fullWidth={true}
+              className="sm:w-auto"
             >
               Create Environment
             </Button>
