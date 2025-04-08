@@ -6,6 +6,7 @@ import {
   ScrollRestoration,
   useNavigation
 } from "@remix-run/react";
+import { AppNavigation } from "./components/AppNavigation";
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import { DefaultErrorBoundary } from "./core/errors/ErrorBoundary";
 import { PageLoading } from "./core/ui/LoadingIndicator";
@@ -54,7 +55,10 @@ export default function App() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {isLoading ? <PageLoading /> : <Outlet />}
+      <AppNavigation />
+      <main className="flex-1">
+        {isLoading ? <PageLoading /> : <Outlet />}
+      </main>
     </div>
   );
 }

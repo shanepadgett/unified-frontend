@@ -1,10 +1,14 @@
 /**
  * Base API client utilities
- * 
+ *
  * This file contains utilities for making API requests.
  */
 
-import { getEnvironmentConfig } from '../environment/config.server';
+import { getClientEnvironmentConfig } from '../environment/config.client';
+import { EnvironmentConfig } from '../environment/config';
+
+// Default API URL as fallback
+const DEFAULT_API_URL = 'http://localhost:3001';
 
 // Default request timeout in milliseconds
 const DEFAULT_TIMEOUT = 30000;
@@ -101,16 +105,32 @@ export async function fetchWithTimeout<T>(
 }
 
 /**
+ * Get the environment configuration
+ */
+function getConfig(): EnvironmentConfig {
+  // Use client-side config
+  try {
+    return getClientEnvironmentConfig();
+  } catch (error) {
+    // Fallback to default config if client config fails
+    return {
+      apiUrl: DEFAULT_API_URL,
+      environment: 'development' as any,
+    };
+  }
+}
+
+/**
  * Create a base URL for API requests
  */
 export function createApiUrl(path: string): string {
-  const config = getEnvironmentConfig();
+  const config = getConfig();
   const baseUrl = config.apiUrl.endsWith('/')
     ? config.apiUrl.slice(0, -1)
     : config.apiUrl;
-  
+
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  
+
   return `${baseUrl}${normalizedPath}`;
 }
 

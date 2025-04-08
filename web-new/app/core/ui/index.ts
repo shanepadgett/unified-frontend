@@ -16,3 +16,5 @@ export * from './Layout/types';
 
 export { NavBar, SideNav, NavItem } from './Navigation';
 export * from './Navigation/types';
+
+export { LoadingIndicator, PageLoading } from './LoadingIndicator';
