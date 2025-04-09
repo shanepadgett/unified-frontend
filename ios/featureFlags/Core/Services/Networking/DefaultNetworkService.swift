@@ -12,7 +12,7 @@ final class DefaultNetworkService: NetworkService {
     private let config: EnvironmentConfig
     private let session: URLSession
     private let decoder: JSONDecoder
-    
+
     /// Initialize a new network service
     /// - Parameters:
     ///   - config: The environment configuration
@@ -21,13 +21,50 @@ final class DefaultNetworkService: NetworkService {
          session: URLSession = .shared) {
         self.config = config
         self.session = session
-        
+
         // Configure JSON decoder
         self.decoder = JSONDecoder()
         self.decoder.keyDecodingStrategy = .convertFromSnakeCase
-        self.decoder.dateDecodingStrategy = .iso8601
+
+        // Custom date decoding strategy to handle multiple date formats
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+
+        self.decoder.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+
+            // Try ISO8601 first
+            if let date = ISO8601DateFormatter().date(from: dateString) {
+                return date
+            }
+
+            // Try custom format
+            if let date = dateFormatter.date(from: dateString) {
+                return date
+            }
+
+            // Try without milliseconds
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            if let date = dateFormatter.date(from: dateString) {
+                return date
+            }
+
+            // Try simple date format
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            if let date = dateFormatter.date(from: dateString) {
+                return date
+            }
+
+            throw DecodingError.dataCorrupted(DecodingError.Context(
+                codingPath: decoder.codingPath,
+                debugDescription: "Expected date string to be ISO8601 or custom formatted."
+            ))
+        }
     }
-    
+
     /// Performs a GET request
     /// - Parameters:
     ///   - endpoint: The API endpoint
@@ -43,10 +80,10 @@ final class DefaultNetworkService: NetworkService {
             .withQueryItems(queryItems)
             .withHeaders(headers)
             .build()
-        
+
         return try await performRequest(request)
     }
-    
+
     /// Performs a POST request
     /// - Parameters:
     ///   - endpoint: The API endpoint
@@ -62,10 +99,10 @@ final class DefaultNetworkService: NetworkService {
             .withHeaders(headers)
             .withBody(body)
             .build()
-        
+
         return try await performRequest(request)
     }
-    
+
     /// Performs a PUT request
     /// - Parameters:
     ///   - endpoint: The API endpoint
@@ -81,10 +118,10 @@ final class DefaultNetworkService: NetworkService {
             .withHeaders(headers)
             .withBody(body)
             .build()
-        
+
         return try await performRequest(request)
     }
-    
+
     /// Performs a PATCH request
     /// - Parameters:
     ///   - endpoint: The API endpoint
@@ -100,10 +137,10 @@ final class DefaultNetworkService: NetworkService {
             .withHeaders(headers)
             .withBody(body)
             .build()
-        
+
         return try await performRequest(request)
     }
-    
+
     /// Performs a DELETE request
     /// - Parameters:
     ///   - endpoint: The API endpoint
@@ -116,12 +153,12 @@ final class DefaultNetworkService: NetworkService {
         let request = try RequestBuilder(baseURL: config.apiBaseURL, endpoint: endpoint, method: .delete)
             .withHeaders(headers)
             .build()
-        
+
         return try await performRequest(request)
     }
-    
+
     // MARK: - Private Methods
-    
+
     /// Performs a network request and decodes the response
     /// - Parameter request: The URLRequest to perform
     /// - Returns: The decoded response
@@ -129,12 +166,12 @@ final class DefaultNetworkService: NetworkService {
         do {
             // Create a task with a timeout
             let (data, response) = try await session.data(for: request, delegate: nil)
-            
+
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.invalidResponse
             }
-            
+
             // Check status code
             switch httpResponse.statusCode {
             case 200...299:
@@ -149,7 +186,7 @@ final class DefaultNetworkService: NetworkService {
             default:
                 throw NetworkError.requestFailed(statusCode: httpResponse.statusCode, data: data)
             }
-            
+
             // Decode the response
             do {
                 return try decoder.decode(T.self, from: data)

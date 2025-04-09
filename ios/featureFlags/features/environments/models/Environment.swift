@@ -8,17 +8,17 @@
 import Foundation
 
 /// Environment model matching the server model
-struct Environment: Codable, Identifiable, Equatable {
+struct AppEnvironment: Codable, Identifiable, Equatable {
     let id: String
     let name: String
     let description: String
     let isDefault: Bool
     let createdAt: Date
     let updatedAt: Date
-    
+
     /// Create a mock environment for previews
-    static func mock() -> Environment {
-        Environment(
+    static func mock() -> AppEnvironment {
+        AppEnvironment(
             id: UUID().uuidString,
             name: "Development",
             description: "Development environment for testing",
@@ -27,11 +27,11 @@ struct Environment: Codable, Identifiable, Equatable {
             updatedAt: Date()
         )
     }
-    
+
     /// Create a list of mock environments for previews
-    static func mockList() -> [Environment] {
+    static func mockList() -> [AppEnvironment] {
         [
-            Environment(
+            AppEnvironment(
                 id: UUID().uuidString,
                 name: "Development",
                 description: "Development environment for testing",
@@ -39,7 +39,7 @@ struct Environment: Codable, Identifiable, Equatable {
                 createdAt: Date(),
                 updatedAt: Date()
             ),
-            Environment(
+            AppEnvironment(
                 id: UUID().uuidString,
                 name: "Staging",
                 description: "Staging environment for pre-production testing",
@@ -47,7 +47,7 @@ struct Environment: Codable, Identifiable, Equatable {
                 createdAt: Date(),
                 updatedAt: Date()
             ),
-            Environment(
+            AppEnvironment(
                 id: UUID().uuidString,
                 name: "Production",
                 description: "Production environment for live users",
