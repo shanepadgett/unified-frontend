@@ -13,31 +13,31 @@ import SwiftUI
  */
 struct AppColors {
     // Primary colors
-    static let primary = Color("Primary", bundle: nil)
-    
+    static let primary = Color("Primary")
+
     // Background colors
-    static let background = Color(UIColor.systemBackground)
-    static let secondaryBackground = Color(UIColor.secondarySystemBackground)
-    
+    static let background = Color("Background")
+    static let secondaryBackground = Color("SecondaryBackground")
+
     // Text colors
-    static let text = Color(UIColor.label)
-    static let secondaryText = Color(UIColor.secondaryLabel)
-    static let tertiaryText = Color(UIColor.tertiaryLabel)
-    
+    static let text = Color("Text")
+    static let secondaryText = Color("SecondaryText")
+    static let tertiaryText = Color("TertiaryText")
+
     // Border colors
-    static let border = Color(UIColor.separator)
-    
+    static let border = Color("Border")
+
     // Status colors
-    static let success = Color.green
-    static let warning = Color.yellow
-    static let error = Color.red
-    static let info = Color.blue
-    
+    static let success = Color("Success")
+    static let warning = Color("Warning")
+    static let error = Color("Error")
+    static let info = Color("Info")
+
     // Dark mode specific colors
     struct Dark {
-        static let background = Color("DarkBackground", bundle: nil)
-        static let card = Color("DarkCard", bundle: nil)
-        static let border = Color("DarkBorder", bundle: nil)
+        static let background = Color("DarkBackground")
+        static let card = Color("DarkCard")
+        static let border = Color("DarkBorder")
     }
 }
 
@@ -54,7 +54,7 @@ extension Color {
     static let appWarning = AppColors.warning
     static let appError = AppColors.error
     static let appInfo = AppColors.info
-    
+
     // Dark mode specific
     static let appDarkBackground = AppColors.Dark.background
     static let appDarkCard = AppColors.Dark.card
