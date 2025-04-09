@@ -5,25 +5,21 @@ This document outlines a feature-based architectural approach for iOS applicatio
 
 ## Directory Structure
 ```
-featureFlags/
-├── Features/
-│   ├── [FeatureName]/
-│   │   ├── Components/     # Feature-specific SwiftUI views
-│   │   ├── Screens/        # Main feature screens
-│   │   ├── Environment/    # Feature-level environment objects
-│   │   ├── Models/         # Data models and state
-│   │   ├── Services/       # Feature-specific services
-│   │   ├── Utils/         # Feature-specific utilities
-│   │   ├── Tests/         # Feature tests
-│   │   └── README.md      # Feature documentation
-│   └── Shared/
-│       ├── UI/            # Shared UI components
-│       └── Utils/         # Shared utilities
-├── Core/
-│   ├── Environment/       # Global environment objects
-│   ├── Services/         # Global services (analytics, networking)
-│   └── Config/           # App configuration
-└── Common/               # Global type definitions
+src/
+├── features/
+│   └── [FeatureName]/
+│       ├── components/     # Feature-specific SwiftUI views
+│       ├── screens/        # Main feature screens/views
+│       ├── models/         # Data models and state
+│       ├── services/       # Feature-specific services
+│       ├── utils/          # Feature-specific utilities
+│       ├── tests/          # Feature tests
+│       └── README.md       # Feature documentation
+└── core/
+    ├── ui/                # Shared UI components
+    ├── utils/             # Shared utilities
+    ├── services/          # Global services (analytics, networking)
+    └── config/            # App configuration
 ```
 
 ## Core Principles

@@ -11,7 +11,7 @@ import SwiftUI
 struct featureFlagsApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            EmptyView()
         }
     }
 }
