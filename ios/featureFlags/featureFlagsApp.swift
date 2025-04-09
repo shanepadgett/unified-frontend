@@ -11,6 +11,7 @@ import SwiftUI
 struct featureFlagsApp: App {
     // == State ==
     @State private var selectedTab = "flags"
+    @ObservedObject private var colorSchemeManager = ColorSchemeManager.shared
 
     // == Computed ==
     private var tabs: [TabItem] {
@@ -25,7 +26,7 @@ struct featureFlagsApp: App {
                 id: "environments",
                 title: "Environments",
                 icon: Image(systemName: "server.rack"),
-                selectedIcon: Image(systemName: "server.rack.fill")
+                selectedIcon: Image(systemName: "server.rack")
             )
         ]
     }
@@ -34,12 +35,19 @@ struct featureFlagsApp: App {
         WindowGroup {
             AppTabView(tabs: tabs, selectedTab: $selectedTab) {
                 ZStack {
+                    Color.appBackground.edgesIgnoringSafeArea(.all)
+
                     if selectedTab == "flags" {
                         FeatureFlagDashboard()
                     } else {
                         EnvironmentDashboard()
                     }
                 }
+            }
+            .withColorScheme()
+            .onAppear {
+                // Set the app to use dark mode by default
+                colorSchemeManager.colorScheme = .dark
             }
         }
     }

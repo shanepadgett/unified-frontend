@@ -67,7 +67,7 @@ struct CreateEnvironmentForm: View {
                     TextField("e.g., Production, Staging, Development", text: $name)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
-                        .background(Color.appSecondaryBackground)
+                        .background(Color.clear)
                         .cornerRadius(8)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
@@ -82,17 +82,22 @@ struct CreateEnvironmentForm: View {
                         .font(.subheadline)
                         .foregroundColor(.appSecondaryText)
 
-                    TextEditor(text: $description)
-                        .frame(minHeight: 100)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.appSecondaryBackground)
-                        .cornerRadius(8)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.appBorder, lineWidth: 1)
-                        )
-                        .disabled(isSubmitting)
+                    ZStack {
+                        Color.appSecondaryBackground
+                            .cornerRadius(8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.appBorder, lineWidth: 1)
+                            )
+
+                        TextEditor(text: $description)
+                            .frame(minHeight: 100)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .scrollContentBackground(.hidden)
+                            .cornerRadius(8)
+                            .disabled(isSubmitting)
+                    }
                 }
 
                 // Default checkbox
@@ -116,6 +121,7 @@ struct CreateEnvironmentForm: View {
                 .padding(.top, 8)
             }
         }
+        .padding(.horizontal)
     }
 
     // == Actions ==

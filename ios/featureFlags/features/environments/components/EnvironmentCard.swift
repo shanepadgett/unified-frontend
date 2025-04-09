@@ -59,13 +59,14 @@ struct EnvironmentCard: View {
 
     // == Body ==
     var body: some View {
-        Card(padding: .md, hoverable: true) {
+        Card(hoverable: true) {
             if isEditing {
                 editView
             } else {
                 displayView
             }
         }
+        .padding(.horizontal)
     }
 
     // == Subviews ==
@@ -113,7 +114,7 @@ struct EnvironmentCard: View {
 
             // Action buttons
             VStack(spacing: 8) {
-                AppButton("Edit", variant: .secondary, fullWidth: true, action: {
+                AppButton("Edit", variant: .outline, fullWidth: true, action: {
                     startEditing()
                 })
 
@@ -141,7 +142,7 @@ struct EnvironmentCard: View {
                 TextField("Environment name", text: $name)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                    .background(Color.appSecondaryBackground)
+                    .background(Color.clear)
                     .cornerRadius(8)
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
@@ -155,16 +156,21 @@ struct EnvironmentCard: View {
                     .font(.subheadline)
                     .foregroundColor(.appSecondaryText)
 
-                TextEditor(text: $description)
-                    .frame(minHeight: 100)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.appSecondaryBackground)
-                    .cornerRadius(8)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.appBorder, lineWidth: 1)
-                    )
+                ZStack {
+                    Color.appSecondaryBackground
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.appBorder, lineWidth: 1)
+                        )
+
+                    TextEditor(text: $description)
+                        .frame(minHeight: 100)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .scrollContentBackground(.hidden)
+                        .cornerRadius(8)
+                }
             }
 
             // Default checkbox

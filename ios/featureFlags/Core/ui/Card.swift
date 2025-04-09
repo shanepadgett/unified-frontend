@@ -24,7 +24,7 @@ public struct CardProps {
     let padding: CardPadding
     let hoverable: Bool
     let bordered: Bool
-    
+
     public init(
         padding: CardPadding = .md,
         hoverable: Bool = false,
@@ -41,7 +41,7 @@ public struct Card<Content: View>: View {
     // == Properties ==
     let props: CardProps
     let content: Content
-    
+
     // == Computed ==
     private var paddingValue: EdgeInsets {
         switch props.padding {
@@ -55,12 +55,12 @@ public struct Card<Content: View>: View {
             return EdgeInsets(top: 24, leading: 24, bottom: 24, trailing: 24)
         }
     }
-    
+
     // == Body ==
     public var body: some View {
         content
             .padding(paddingValue)
-            .background(Color(.systemBackground))
+            .background(Color.appSecondaryBackground)
             .cornerRadius(8)
             .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
             .overlay(
@@ -68,7 +68,7 @@ public struct Card<Content: View>: View {
                     .stroke(props.bordered ? Color.appBorder : Color.clear, lineWidth: 1)
             )
     }
-    
+
     // == Initializers ==
     public init(
         padding: CardPadding = .md,
@@ -83,7 +83,7 @@ public struct Card<Content: View>: View {
         )
         self.content = content()
     }
-    
+
     public init(
         props: CardProps,
         @ViewBuilder content: () -> Content
@@ -95,14 +95,14 @@ public struct Card<Content: View>: View {
 
 public struct CardHeader<Content: View>: View {
     let content: Content
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             content
             Divider()
         }
     }
-    
+
     public init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
@@ -110,13 +110,13 @@ public struct CardHeader<Content: View>: View {
 
 public struct CardBody<Content: View>: View {
     let content: Content
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             content
         }
     }
-    
+
     public init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
@@ -124,14 +124,14 @@ public struct CardBody<Content: View>: View {
 
 public struct CardFooter<Content: View>: View {
     let content: Content
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Divider()
             content
         }
     }
-    
+
     public init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
@@ -145,31 +145,31 @@ public struct CardFooter<Content: View>: View {
             Text("Basic Card")
                 .font(.headline)
         }
-        
+
         // Card with header and footer
         Card {
             CardHeader {
                 Text("Card Header")
                     .font(.headline)
             }
-            
+
             CardBody {
                 Text("Card Body Content")
                     .font(.body)
             }
-            
+
             CardFooter {
                 Text("Card Footer")
                     .font(.caption)
             }
         }
-        
+
         // Card with different padding
         Card(padding: .lg) {
             Text("Card with Large Padding")
                 .font(.headline)
         }
-        
+
         // Card without border
         Card(bordered: false) {
             Text("Card without Border")

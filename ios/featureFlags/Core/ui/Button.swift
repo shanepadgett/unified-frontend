@@ -34,7 +34,7 @@ public struct ButtonProps {
     let disabled: Bool
     let fullWidth: Bool
     let action: () -> Void
-    
+
     public init(
         variant: ButtonVariant = .primary,
         size: ButtonSize = .md,
@@ -59,32 +59,32 @@ public struct AppButton: View {
     let label: String
     var leftIcon: Image?
     var rightIcon: Image?
-    
+
     // == Computed ==
     private var isDisabled: Bool {
         props.disabled || props.isLoading
     }
-    
+
     private var backgroundColor: Color {
         if isDisabled {
             return backgroundColorForVariant.opacity(0.6)
         }
         return backgroundColorForVariant
     }
-    
+
     private var backgroundColorForVariant: Color {
         switch props.variant {
         case .primary:
             return .appPrimary
         case .secondary:
-            return Color(.systemGray5)
+            return Color.appSecondaryBackground
         case .outline, .ghost:
             return .clear
         case .danger:
             return .appError
         }
     }
-    
+
     private var foregroundColor: Color {
         switch props.variant {
         case .primary, .danger:
@@ -92,14 +92,14 @@ public struct AppButton: View {
         case .secondary:
             return .appText
         case .outline, .ghost:
-            return props.variant == .outline ? .appPrimary : .appText
+            return .appPrimary
         }
     }
-    
+
     private var borderColor: Color? {
-        props.variant == .outline ? .appBorder : nil
+        props.variant == .outline ? .appPrimary : nil
     }
-    
+
     private var padding: EdgeInsets {
         switch props.size {
         case .sm:
@@ -110,7 +110,7 @@ public struct AppButton: View {
             return EdgeInsets(top: 12, leading: 24, bottom: 12, trailing: 24)
         }
     }
-    
+
     private var fontSize: Font {
         switch props.size {
         case .sm, .md:
@@ -119,7 +119,7 @@ public struct AppButton: View {
             return .system(.body, design: .default).weight(.medium)
         }
     }
-    
+
     // == Body ==
     public var body: some View {
         Button(action: {
@@ -133,16 +133,16 @@ public struct AppButton: View {
                         .progressViewStyle(CircularProgressViewStyle(tint: foregroundColor))
                         .scaleEffect(0.7)
                 }
-                
+
                 if let leftIcon = leftIcon, !props.isLoading {
                     leftIcon
                         .imageScale(.medium)
                 }
-                
+
                 Text(label)
                     .font(fontSize)
                     .lineLimit(1)
-                
+
                 if let rightIcon = rightIcon {
                     rightIcon
                         .imageScale(.medium)
@@ -161,7 +161,7 @@ public struct AppButton: View {
         }
         .disabled(isDisabled)
     }
-    
+
     // == Initializers ==
     public init(
         _ label: String,
@@ -186,7 +186,7 @@ public struct AppButton: View {
         self.leftIcon = leftIcon
         self.rightIcon = rightIcon
     }
-    
+
     public init(
         _ label: String,
         props: ButtonProps,
@@ -204,21 +204,21 @@ public struct AppButton: View {
 #Preview {
     VStack(spacing: 20) {
         AppButton("Primary Button", action: {})
-        
+
         AppButton("Secondary Button", variant: .secondary, action: {})
-        
+
         AppButton("Outline Button", variant: .outline, action: {})
-        
+
         AppButton("Ghost Button", variant: .ghost, action: {})
-        
+
         AppButton("Danger Button", variant: .danger, action: {})
-        
+
         AppButton("Loading Button", isLoading: true, action: {})
-        
+
         AppButton("Disabled Button", disabled: true, action: {})
-        
+
         AppButton("Full Width Button", fullWidth: true, action: {})
-        
+
         AppButton(
             "Button with Icons",
             leftIcon: Image(systemName: "star.fill"),

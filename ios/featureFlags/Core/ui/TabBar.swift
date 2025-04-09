@@ -89,10 +89,11 @@ public struct AppTabView<Content: View>: View {
 
             VStack(spacing: 0) {
                 Divider()
+                    .background(Color.appBorder)
                 AppTabBar(tabs: tabs, selectedTab: $selectedTab)
-                    .background(Color(.systemBackground))
+                    .background(Color.appSecondaryBackground)
             }
-            .background(Color(.systemBackground))
+            .background(Color.appSecondaryBackground)
             .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: -2)
         }
         .edgesIgnoringSafeArea(.bottom)

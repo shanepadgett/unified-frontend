@@ -50,7 +50,7 @@ struct EnvironmentDashboard: View {
                                 }
                             )
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal)
                     }
 
                     // Desktop header (hidden on mobile)
@@ -85,7 +85,7 @@ struct EnvironmentDashboard: View {
                                 onChange: viewModel.setSearchTerm
                             )
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal)
                     }
 
                     // Create form (when shown)
@@ -99,7 +99,6 @@ struct EnvironmentDashboard: View {
                                 viewModel.toggleCreateForm()
                             }
                         )
-                        .padding(.horizontal, 16)
                     }
 
                     // Content area
@@ -147,9 +146,8 @@ struct EnvironmentDashboard: View {
                                     )
                                 }
                             }
-                            .padding(.top, 8)
+                            .padding(.vertical)
                         }
-                        .padding(.horizontal, 16)
                     }
                 }
             }
